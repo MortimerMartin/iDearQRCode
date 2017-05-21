@@ -9,5 +9,6 @@
 #import "BaseViewController.h"
 
 @interface PickDetailVc : BaseViewController
+@property (nonatomic , copy) NSString * pickId;
 
 @end

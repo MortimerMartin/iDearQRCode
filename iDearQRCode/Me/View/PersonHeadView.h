@@ -10,4 +10,8 @@
 
 @interface PersonHeadView : UIView
 
+@property (nonatomic , copy) NSString * URL;
+@property (nonatomic , copy) NSString * name;
+@property (nonatomic , copy) NSString * doing;
+
 @end

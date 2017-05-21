@@ -9,5 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface PickDateView : UIView
+-(instancetype)initWithScreenDate:(void(^)(NSString * state, NSString * end,NSInteger cancel))screen;
+@property (nonatomic , copy) void(^didSelectCell)(NSString * pickId);
 
+-(void)show;
 @end

@@ -10,4 +10,8 @@
 
 @interface SheetViewCell : UITableViewCell
 
+@property (nonatomic , copy) NSString * title;
+@property (nonatomic , assign) NSInteger color;
+
+
 @end

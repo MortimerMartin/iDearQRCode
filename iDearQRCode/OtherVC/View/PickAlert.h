@@ -10,4 +10,13 @@
 
 @interface PickAlert : UIView
 
+-(instancetype)initWithPickTitle:(NSString *)title AlertAction:(NSArray *)actions Complete:(void(^)(NSInteger index))complete;
+
+@property (nonatomic , copy) void(^clickBtn)(NSInteger index);
+
+-(void)showAlert;
+
+-(void)dismiss;
+
+-(void)remove;
 @end

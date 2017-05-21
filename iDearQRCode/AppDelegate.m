@@ -7,7 +7,9 @@
 //
 
 #import "AppDelegate.h"
-
+#import "QRCNavigationController.h"
+#import "QRCViewController.h"
+#import "RTNetworking.h"
 @interface AppDelegate ()
 
 @end
@@ -16,8 +18,30 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+
+
+    [self loadNetWork];
+
+    UIWindow * window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    window.backgroundColor = [UIColor whiteColor];
+    QRCViewController * qrcVC = [[QRCViewController alloc] init];
+    QRCNavigationController * arcNav = [[QRCNavigationController alloc] initWithRootViewController:qrcVC];
+    window.rootViewController = arcNav;
+    [window makeKeyAndVisible];
+    self.window = window;
     // Override point for customization after application launch.
     return YES;
+}
+
+-(void)loadNetWork{
+    [RTNetworking updateBaseUrl:@"https://api.shunliandongli.com"];
+    [RTNetworking enableInterfaceDebug:YES]; //default  NO
+
+    [RTNetworking configRequestType:kRTRequestTypeJSON
+                       responseType:RTResponseTypeData
+                shouldAutoEncodeUrl:YES
+            callbackOnCancelRequest:NO];
+
 }
 
 

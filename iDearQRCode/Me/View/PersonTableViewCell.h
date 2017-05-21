@@ -10,4 +10,8 @@
 
 @interface PersonTableViewCell : UITableViewCell
 
+@property (nonatomic , copy) NSString * title;
+@property (nonatomic , copy) NSString * content;
+@property (nonatomic , assign) BOOL isLast;
+
 @end

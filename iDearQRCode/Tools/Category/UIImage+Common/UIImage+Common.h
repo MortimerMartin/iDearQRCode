@@ -31,4 +31,5 @@
  */
 +(UIImage *)imageWithName:(NSString *)name withType:(NSString *)type;
 
+- (UIImage *)circleImage;
 @end

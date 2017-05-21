@@ -8,6 +8,25 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, PickModelType) {
+    PickModelNormal = 0,
+    PickModelDelete,
+    PickModelSelectAll,
+    PickModelCombine
+};
+
 @interface PickingFootView : UIView
 
+-(instancetype)initWithPickAction:(void(^)(PickModelType type))pick;
+
+
+@property (nonatomic , copy) void(^pickAction)(PickModelType) ;
+
+
+
+-(void)show:(PickModelType)type;
+
+-(void)dismiss;
+
+-(void)remove;
 @end

@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum {
+    UPViewSearchType = 0,
+    UPViewScreenType,
+    UPViewDeleteType,
+    UPViewCombineType,
+    UPViewNormal
+} UPViewtype;
 @interface PickingHeadView : UIView
+
+@property (nonatomic , copy) void(^didClickHandler)(UPViewtype,BOOL) ;
 
 @end

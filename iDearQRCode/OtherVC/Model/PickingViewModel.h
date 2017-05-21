@@ -10,4 +10,9 @@
 
 @interface PickingViewModel : ViewModelClass
 
+// 获取商品列表
+- (void)fetchPickingList;
+// 跳转到商品详情页
+- (void)pushDetailWithVC:(UIViewController *)vc didSelectRowAtPickId:(NSString *)pickId;
+
 @end

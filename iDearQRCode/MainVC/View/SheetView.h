@@ -10,4 +10,9 @@
 
 @interface SheetView : UIView
 
+-(instancetype)initWithMenuArray:(NSArray *)menu CompleteBlock:(void(^)(NSInteger))selectBlock;
+
+-(void)show;
+
+-(void)remove;
 @end

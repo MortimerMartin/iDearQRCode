@@ -11,4 +11,6 @@
 @interface UIImage (Normalimage)
 
 + (UIImage *)getNormalImage:(NSString *)imageStr;
+
++ (UIImage *)creatImageWithColor:(UIColor *)color;
 @end

@@ -9,6 +9,12 @@
 #ifndef iDearQRCode_pch
 #define iDearQRCode_pch
 
+//公共方法
+#import "iDear_Public.h"
+//#import "UIView+SDAutoLayout.h"
+#import "UIColor+HexString.h"
+#import "Masonry.h"
+#import "UIImageView+WebCache.h"
 // Include any system framework and library headers here that should be included in all compilation units.
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
 

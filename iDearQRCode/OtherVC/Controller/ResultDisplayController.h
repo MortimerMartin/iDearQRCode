@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ResultDisplayController : UITableViewController
+@interface ResultDisplayController : UITableViewController<UISearchResultsUpdating>
+
+@property (nonatomic , strong) NSMutableArray * datas;
+@property (nonatomic , copy) void(^upPickStatusStytle)(void);
 
 @end

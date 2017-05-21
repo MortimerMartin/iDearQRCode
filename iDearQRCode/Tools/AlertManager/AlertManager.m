@@ -137,7 +137,7 @@ static __strong NSString *__alertDefaultTitle = @"提示";
  */
 + (void)ask:(void(^)(NSInteger answer))block title:(NSString*)title question:(NSString *)question withCancel:(NSString *)cancelButtonTitle withButtons:(NSArray*)buttons{
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:question preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:question preferredStyle:[question isEqualToString:@"更换头像"] ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
         NSInteger index = 0;
         if (cancelButtonTitle) {
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {

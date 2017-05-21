@@ -32,4 +32,5 @@
 - (void)disableAWhile;
 - (void)disableAWhile:(NSTimeInterval)time;
 
+
 @end
