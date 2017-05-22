@@ -60,9 +60,9 @@
 }
 
 
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
-}
+//-(UIStatusBarStyle)preferredStatusBarStyle{
+//    return UIStatusBarStyleLightContent;
+//}
 
 -(UIViewController *)childViewControllerForStatusBarStyle{
   return   self.topViewController;

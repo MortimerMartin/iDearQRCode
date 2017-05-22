@@ -10,7 +10,8 @@
 
 @interface BaseViewController ()<UITableViewDelegate , UITableViewDataSource>
 
-
+@property (nonatomic, assign) BOOL statusBarStyle;
+@property (nonatomic, assign) BOOL statusBarHidden;
 @end
 
 @implementation BaseViewController
@@ -18,6 +19,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+     [self setIsExtendLayout:NO];
+    
+    [self yd_removeNavgationBarLine];
 //    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"#eff4f4"];
@@ -75,6 +79,111 @@
 
 }
 
+#pragma mark - private
+/**
+ *  去除nav 上的line
+ */
+- (void)yd_removeNavgationBarLine {
+
+    if ([self.navigationController.navigationBar respondsToSelector:@selector( setBackgroundImage:forBarMetrics:)]){
+
+        NSArray *list=self.navigationController.navigationBar.subviews;
+
+        for (id obj in list) {
+
+            if ([obj isKindOfClass:[UIImageView class]]) {
+
+                UIImageView *imageView=(UIImageView *)obj;
+
+                NSArray *list2=imageView.subviews;
+
+                for (id obj2 in list2) {
+
+                    if ([obj2 isKindOfClass:[UIImageView class]]) {
+
+                        UIImageView *imageView2=(UIImageView *)obj2;
+
+                        imageView2.hidden=YES;
+
+                    }
+                }
+            }
+        }
+    }
+}
+
+- (void)setIsExtendLayout:(BOOL)isExtendLayout {
+
+    if (!isExtendLayout) {
+        [self initializeSelfVCSetting];
+    }
+}
+
+- (void)initializeSelfVCSetting {
+
+    if ([self respondsToSelector:@selector(setAutomaticallyAdjustsScrollViewInsets:)]) {
+        [self setAutomaticallyAdjustsScrollViewInsets:NO];
+    }
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+    }
+}
+
+- (void)changeStatusBarStyle:(BOOL)statusBarStyle
+             statusBarHidden:(BOOL)statusBarHidden
+     changeStatusBarAnimated:(BOOL)animated {
+
+    self.statusBarStyle=statusBarStyle;
+    self.statusBarHidden=statusBarHidden;
+    if (animated) {
+        [UIView animateWithDuration:0.25 animations:^{
+            [self setNeedsStatusBarAppearanceUpdate];
+        }];
+    }
+    else{
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+}
+
+- (void)hideNavigationBar:(BOOL)isHide
+                 animated:(BOOL)animated{
+
+    if (animated) {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.navigationController.navigationBarHidden=isHide;
+        }];
+    }
+    else{
+        self.navigationController.navigationBarHidden=isHide;
+    }
+}
+
+- (void)layoutNavigationBar:(UIImage*)backGroundImage
+                 titleColor:(UIColor*)titleColor
+                  titleFont:(UIFont*)titleFont
+          leftBarButtonItem:(UIBarButtonItem*)leftItem
+         rightBarButtonItem:(UIBarButtonItem*)rightItem {
+
+    if (backGroundImage) {
+        [self.navigationController.navigationBar setBackgroundImage:backGroundImage forBarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+    }
+    if (titleColor&&titleFont) {
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:titleColor,NSFontAttributeName:titleFont}];
+    }
+    else if (titleFont) {
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:titleFont}];
+    }
+    else if (titleColor){
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:titleColor}];
+    }
+    if (leftItem) {
+        self.navigationItem.leftBarButtonItem=leftItem;
+    }
+    if (rightItem) {
+        self.navigationItem.rightBarButtonItem=rightItem;
+    }
+}
+
 #pragma mark - Getters
 
 /**
@@ -108,6 +217,17 @@
     return _dataSource;
 }
 
+#pragma mark - system
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+
+  return  self.statusBarStyle == YES ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+}
+
+- (BOOL)prefersStatusBarHidden {
+
+    return self.statusBarHidden;
+}
 //-(UIStatusBarStyle)preferredStatusBarStyle{
 //    return UIStatusBarStyleLightContent;
 //}

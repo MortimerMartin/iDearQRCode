@@ -16,7 +16,8 @@
 #import "PickDateView.h"
 #import "PickDetailVc.h"
 #import "PickingViewModel.h"
-@interface PickingVC ()<UITableViewDelegate , UITableViewDataSource>
+#import "UIScrollView+EmptyDataSet.h"
+@interface PickingVC ()<UITableViewDelegate , UITableViewDataSource ,DZNEmptyDataSetSource,DZNEmptyDataSetDelegate>
 
 @property (nonatomic , assign) UPViewtype  type;
 @property (nonatomic , strong) PickingHeadView * pickHead;
@@ -52,8 +53,7 @@ static NSString * identifier = @"PickingCell" ;
     ResultDisplayController * result = [[ResultDisplayController alloc] init];
     WeakObj(self);
     result.upPickStatusStytle=^{
-        selfWeak.statusStytle = NO;
-        [selfWeak setNeedsStatusBarAppearanceUpdate];
+          [selfWeak changeStatusBarStyle:NO statusBarHidden:NO changeStatusBarAnimated:NO];
     };
     self.searchView = [[UISearchController alloc] initWithSearchResultsController:result];
     self.searchView.searchResultsUpdater = result;
@@ -91,12 +91,11 @@ static NSString * identifier = @"PickingCell" ;
         make.top.equalTo(self.pickHead.mas_bottom);
         make.left.right.bottom.equalTo(self.view);
     }];
-//    self.pickHead.sd_layout.topEqualToView(self.view).leftEqualToView(self.view).rightEqualToView(self.view).heightIs(40);
-//    self.tableView.sd_layout.topSpaceToView(self.pickHead,0).leftEqualToView(self.view).rightEqualToView(self.view).bottomEqualToView(self.view);
+    self.tableView.emptyDataSetSource = self;
+    self.tableView.emptyDataSetDelegate = self;
     self.tableView.sectionFooterHeight = 0.01f;
     self.tableView.showsVerticalScrollIndicator = NO;
-//    self.tableView.rowHeight = UITableViewAutomaticDimension;
-//    self.tableView.estimatedRowHeight = 110;
+
     [self.tableView registerClass:[PickingCell class] forCellReuseIdentifier:identifier];
 
 
@@ -123,9 +122,6 @@ static NSString * identifier = @"PickingCell" ;
 }
 
 #pragma mark  UITableViewDataSource
-//-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-//    return 2;
-//}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -186,9 +182,29 @@ static NSString * identifier = @"PickingCell" ;
     return pick.height;
 }
 
-//-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+
+#pragma mark DZNEmptyDataSetSource
+//返回图片
+//-(UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView{
 //
 //}
+//返回标题文字
+-(NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView{
+    NSString *text = @"没有数据";
+    NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:18.0], NSForegroundColorAttributeName: text_Color1};
+    return [[NSAttributedString alloc] initWithString:text attributes:attribute];
+}
+//空白区域点击事件
+-(void)emptyDataSet:(UIScrollView *)scrollView didTapView:(UIView *)view{
+
+}
+
+-(UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView{
+
+    return back_Color;
+}
+
+#pragma mark RightItemAction
 
 -(void)change{
     switch (self.type) {
@@ -229,8 +245,8 @@ static NSString * identifier = @"PickingCell" ;
                     if (self.type == UPViewDeleteType || self.type == UPViewCombineType) {
                         return ;
                     }
-                    self.statusStytle = YES;
-                    [self setNeedsStatusBarAppearanceUpdate];
+
+                    [self changeStatusBarStyle:YES statusBarHidden:NO changeStatusBarAnimated:NO];
                     [self presentViewController:self.searchView animated:YES completion:^{
 
                     }];
@@ -241,14 +257,14 @@ static NSString * identifier = @"PickingCell" ;
                     if (self.type == UPViewDeleteType || self.type == UPViewCombineType) {
                         return ;
                     }
-                    self.statusStytle = YES;
-                    [self setNeedsStatusBarAppearanceUpdate];
+
+                    [self changeStatusBarStyle:YES statusBarHidden:NO changeStatusBarAnimated:NO];
                     WeakObj(self);
                     PickDateView * date = [[PickDateView alloc] initWithScreenDate:^(NSString * state, NSString * end,NSInteger index) {
                         switch (index) {
                             case 0:
-                                {   selfWeak.statusStytle = NO;
-                                    [selfWeak setNeedsStatusBarAppearanceUpdate];
+                                {
+                                      [self changeStatusBarStyle:NO statusBarHidden:NO changeStatusBarAnimated:YES];
                                 }
                                 break;
                             case 1:
@@ -327,54 +343,58 @@ static NSString * identifier = @"PickingCell" ;
                 break;
             case PickModelDelete:
             {
-                PickAlert * alert = [[PickAlert alloc] initWithPickTitle:[NSString stringWithFormat:@"是否确定删除这%ld项",self.selectArray.count] AlertAction:@[@"取消",@"确定"] Complete:^(NSInteger index) {
-                    if (index == 1) {
+                   if (self.selectArray.count>0) {
+                       PickAlert * alert = [[PickAlert alloc] initWithPickTitle:[NSString stringWithFormat:@"是否确定删除这%ld项",self.selectArray.count] AlertAction:@[@"取消",@"确定"] Complete:^(NSInteger index) {
+                           if (index == 1) {
 
-                        if (self.selectArray.count>0) {
-                            for (int j = 0; j <self.selectArray.count; j++) {
-                                for (int i = 0; i<self.dataSource.count; i++) {
-                                    PickingModel * pick = self.dataSource[i];
-                                    if ([pick.pickId isEqualToString:self.selectArray[j]]) {
-                                        [self.dataSource removeObjectAtIndex:i];
-                                        NSLog(@"%d",j);
-                                    }
-                                }
-                            }
+
+                               for (int j = 0; j <self.selectArray.count; j++) {
+                                   for (int i = 0; i<self.dataSource.count; i++) {
+                                       PickingModel * pick = self.dataSource[i];
+                                       if ([pick.pickId isEqualToString:self.selectArray[j]]) {
+                                           [self.dataSource removeObjectAtIndex:i];
+                                           NSLog(@"%d",j);
+                                       }
+                                   }
+                               }
                             [self resetDefaultSeting];
-                        }
 
 
+
+                           }
+                       }];
+
+                       [alert showAlert];
+                       _pickAlert = alert;
                     }
-                }];
-
-                [alert showAlert];
-                _pickAlert = alert;
             }
                 break;
             case PickModelCombine:
             {
-                PickAlert * alert = [[PickAlert alloc] initWithPickTitle:self.dataSource.count == self.selectArray.count ? [NSString stringWithFormat:@"是否确定合并全部%ld项",self.selectArray.count] : [NSString stringWithFormat:@"是否确定合并这%ld项",self.selectArray.count] AlertAction:@[@"取消",@"确定"] Complete:^(NSInteger index) {
-                    if (index == 1) {
+                    if (self.selectArray.count>0) {
+                        PickAlert * alert = [[PickAlert alloc] initWithPickTitle:self.dataSource.count == self.selectArray.count ? [NSString stringWithFormat:@"是否确定合并全部%ld项",self.selectArray.count] : [NSString stringWithFormat:@"是否确定合并这%ld项",self.selectArray.count] AlertAction:@[@"取消",@"确定"] Complete:^(NSInteger index) {
+                            if (index == 1) {
 
-                        if (self.selectArray.count>0) {
-                            for (int j = 0; j <self.selectArray.count; j++) {
-                                for (int i = 0; i<self.dataSource.count; i++) {
-                                    PickingModel * pick = self.dataSource[i];
-                                    if ([pick.pickId isEqualToString:self.selectArray[j]]) {
-                                        [self.dataSource removeObjectAtIndex:i];
-                                        NSLog(@"%d",j);
+
+                                for (int j = 0; j <self.selectArray.count; j++) {
+                                    for (int i = 0; i<self.dataSource.count; i++) {
+                                        PickingModel * pick = self.dataSource[i];
+                                        if ([pick.pickId isEqualToString:self.selectArray[j]]) {
+                                            [self.dataSource removeObjectAtIndex:i];
+                                            NSLog(@"%d",j);
+                                        }
                                     }
                                 }
+                                [self resetDefaultSeting];
                             }
-                            [self resetDefaultSeting];
-                        }
 
 
+
+                        }];
+
+                        [alert showAlert];
+                        _pickAlert = alert;
                     }
-                }];
-
-                [alert showAlert];
-                _pickAlert = alert;
             }
                 break;
             case PickModelSelectAll:
@@ -444,9 +464,9 @@ static NSString * identifier = @"PickingCell" ;
 
 }
 
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return _statusStytle == YES ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
-}
+//-(UIStatusBarStyle)preferredStatusBarStyle{
+//    return self.statusStytle == YES ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+//}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

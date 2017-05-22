@@ -9,6 +9,6 @@
 #import "BaseViewController.h"
 
 @interface PickingVC : BaseViewController
-@property (nonatomic , assign) BOOL statusStytle;
+
 
 @end

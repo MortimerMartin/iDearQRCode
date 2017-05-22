@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "QRCNavigationController.h"
 #import "QRCViewController.h"
-#import "RTNetworking.h"
+
 @interface AppDelegate ()
 
 @end
@@ -20,7 +20,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 
-    [self loadNetWork];
+
 
     UIWindow * window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     window.backgroundColor = [UIColor whiteColor];
@@ -33,16 +33,7 @@
     return YES;
 }
 
--(void)loadNetWork{
-    [RTNetworking updateBaseUrl:@"https://api.shunliandongli.com"];
-    [RTNetworking enableInterfaceDebug:YES]; //default  NO
 
-    [RTNetworking configRequestType:kRTRequestTypeJSON
-                       responseType:RTResponseTypeData
-                shouldAutoEncodeUrl:YES
-            callbackOnCancelRequest:NO];
-
-}
 
 
 - (void)applicationWillResignActive:(UIApplication *)application {

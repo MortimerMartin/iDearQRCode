@@ -64,8 +64,10 @@
                                      @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1495084431319&di=6ee6bcce85550898fa42c8e86ace9f79&imgtype=0&src=http%3A%2F%2Ffile06.16sucai.com%2F2016%2F0303%2F6b7f7a3c5ccbe9900094add1d8b5cbc8.jpg",
                                      @"http://file06.16sucai.com/2016/0303/3d9ef7096c8c540064f6c4eb8877a929.jpg",
                                      @"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3219125739,1362099777&fm=23&gp=0.jpg"
-                                     ];
-    for (int i = 0; i< 30; i++) {
+
+                                      ];
+    int countIndex = arc4random_uniform(10);
+    for (int i = 0; i< countIndex; i++) {
 
         int nameIndex = arc4random_uniform(5);
         int doIndex = arc4random_uniform(5);

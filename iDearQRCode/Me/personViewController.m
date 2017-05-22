@@ -196,9 +196,9 @@ static NSString * identifier = @"PersonTableViewCell" ;
     
 }
 
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
-}
+//-(UIStatusBarStyle)preferredStatusBarStyle{
+//    return UIStatusBarStyleLightContent;
+//}
 
 //- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 //    if (scrollView == self.tableView)

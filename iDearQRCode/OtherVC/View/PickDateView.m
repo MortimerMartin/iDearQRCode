@@ -10,13 +10,18 @@
 #import "NSDate+Extension.h"
 #import "UIView+MJExtension.h"
 #import "UIView+Controller.h"
-
+#import "PickingVC.h"
 #import "PickingCell.h"
 #import "PickingModel.h"
-
+#import "PickingViewModel.h"
 @interface PickDateView ()<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
 {
     BOOL canTouch;
+    CGFloat beginContentY;
+    CGFloat endContentY;
+    int selectDate;
+    NSString * start_date;
+    NSString * end_date;
 }
 @property (nonatomic , strong) UIView * topView;
 @property (nonatomic , strong) UIButton * startBtn;
@@ -44,6 +49,9 @@ static NSString * identifier = @"PickingDateCell" ;
         tap.delegate = self;
         [self addGestureRecognizer:tap];
         [self setupDefaultView];
+        self.backgroundColor = RGBA(0, 0, 0, 0.4);
+        selectDate = 0;
+
         if (screen) {
             self.clickBtn = ^(NSString * state,NSString * end,NSInteger index){
                 screen(state,end,index);
@@ -85,9 +93,10 @@ static NSString * identifier = @"PickingDateCell" ;
         return btn;
     };
 
-    [self.topView addSubview:self.startBtn = creatBtn([[NSDate dateYesterday] stringWithFormat:@"yyyy-MM-dd"],back_Color,text_Color2,123)];
-
-    [self.topView addSubview:self.endBtn = creatBtn([[NSDate date] stringWithFormat:@"yyyy-MM-dd"],back_Color,text_Color2,124)];
+    start_date = [[NSDate dateYesterday] stringWithFormat:@"yyyy-MM-dd"];
+    [self.topView addSubview:self.startBtn = creatBtn(start_date,back_Color,text_Color2,123)];
+    end_date = [[NSDate date] stringWithFormat:@"yyyy-MM-dd"];
+    [self.topView addSubview:self.endBtn = creatBtn(end_date,back_Color,text_Color2,124)];
     [self.topView addSubview:self.screenBtn = creatBtn(@"筛选",nil,text_Color2,125)];
 
     UIView * line = [UIView new];
@@ -160,77 +169,59 @@ static NSString * identifier = @"PickingDateCell" ;
     switch (sender.tag - 123) {
         case 0:
         {
+            selectDate = 0;
 
+            [UIView animateWithDuration:0.4 animations:^{
+                _bottomView.mj_y = kScreen_height -250;
+
+            } ];
         }
             break;
         case 1:
         {
 
+            selectDate = 1;
+
+            [UIView animateWithDuration:0.4 animations:^{
+                _bottomView.mj_y = kScreen_height - 250;
+
+            } ];
         }
             break;
         case 2:
         {
-            NSArray *namesArray = @[@"Mortimer",
-                                    @"Martin",
-                                    @"chaowei",
-                                    @"leigai",
-                                    @"Hello Kitty"];
 
-            NSArray *textArray = @[@"马面",
-                                   @"鹿角",
-                                   @"蛇身",
-                                   @"鱼鳞",
-                                   @"牛脚"
-                                   ];
-
-            NSArray *commentsArray = @[@"2017-12-33",
-                                       @"2017-12-30",
-                                       @"2017-12-00",
-                                       @"有意思",
-                                       @"你瞅啥？",
-                                       @"瞅你咋地？？？！！！",
-                                       @"hello，看我",
-                                       @"曾经在幽幽暗暗反反复复中追问，才知道平平淡淡从从容容才是真",
-                                       @"人艰不拆",
-                                       @"咯咯哒",
-                                       @"呵呵~~~~~~~~",
-                                       @"我勒个去，啥世道啊",
-                                       @"真有意思啊你💢💢💢"];
-
-            NSArray *picImageNamesArray = @[ @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1495084429317&di=8bf661af0e01924831b035e439500bd6&imgtype=0&src=http%3A%2F%2Ffile06.16sucai.com%2F2016%2F0303%2F7d4ddedc06495605d726459772423d3b.jpg",
-                                             @"http://file06.16sucai.com/2016/0303/567565d0e78a7e51b6c38f07e7be06ac.jpg",
-                                             @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1495084429317&di=8bf661af0e01924831b035e439500bd6&imgtype=0&src=http%3A%2F%2Ffile06.16sucai.com%2F2016%2F0303%2F7d4ddedc06495605d726459772423d3b.jpg",
-                                             @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1495084431319&di=6ee6bcce85550898fa42c8e86ace9f79&imgtype=0&src=http%3A%2F%2Ffile06.16sucai.com%2F2016%2F0303%2F6b7f7a3c5ccbe9900094add1d8b5cbc8.jpg",
-                                             @"http://file06.16sucai.com/2016/0303/3d9ef7096c8c540064f6c4eb8877a929.jpg",
-                                             @"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3219125739,1362099777&fm=23&gp=0.jpg"
-                                             
-                                             ];
-
-            int count = arc4random_uniform(4);
-            [self.screenArray removeAllObjects];
-            for (int i = 0; i< count; i++) {
-
-                int nameIndex = arc4random_uniform(5);
-                int doIndex = arc4random_uniform(5);
-                int timeIndex = arc4random_uniform(13);
-                int iconIndex = arc4random_uniform(6);
-                int countIndex = arc4random_uniform(5);
-
-
-
-                PickingModel * model = [PickingModel new];
-                model.URL = picImageNamesArray[iconIndex];
-                //        model.name = namesArray[nameIndex];
-                model.doSometing = textArray[doIndex];
-                model.join_time = commentsArray[timeIndex];
-                model.count = countIndex;
-                model.pickId = [NSString stringWithFormat:@"%d",i];
-
-                model.height = 78 + countIndex * 24;
-                model.name = [NSString stringWithFormat:@"%@___height:%f___count:%d____",namesArray[nameIndex],model.height,countIndex];
-                [self.screenArray addObject:model];
+            NSDate * start = [NSDate date:start_date WithFormat:@"yyyy-MM-dd"];
+            NSDate * end  = [NSDate date:end_date WithFormat:@"yyyy-MM-dd"];
+            if ([start isLaterThanDate:end]) {
+                return;
             }
-            [self.tableView reloadData];
+
+            PickingViewModel * model = [[PickingViewModel alloc] init];
+            [model setBlockWithReturnBlock:^(id returnValue) {
+                self.screenArray = returnValue;
+
+                CGFloat heigh = 64.0;
+                for (int i = 0; i<self.screenArray.count; i++) {
+                    PickingModel * model = self.screenArray[i];
+                    heigh+=model.height;
+                }
+
+                if (heigh>=kScreen_height - 10) {
+                    self.backgroundColor = back_Color;
+                }else{
+                    self.backgroundColor = RGBA(0, 0, 0, 0.4);
+                }
+                [self.tableView reloadData];
+            } WithErrorBlock:^(id errorCode) {
+                
+            }];
+            
+            [model fetchPickingList];
+
+
+
+
             [UIView animateWithDuration:0.4 animations:^{
                 _bottomView.mj_y = kScreen_height ;
 
@@ -239,15 +230,13 @@ static NSString * identifier = @"PickingDateCell" ;
             break;
         case 3:
         {
-            if (self.clickBtn) {
-                _clickBtn(@"",@"",0);
-            }
+
             [self dismiss:0.4];
         }
             break;
         case 4:
         {
-
+            [self upTextfrom:selectDate];
         }
             break;
 
@@ -256,10 +245,30 @@ static NSString * identifier = @"PickingDateCell" ;
     }
 };
 
+-(void)upTextfrom:(int)select{
+
+    NSDate * date = self.pick.date;
+
+    if (select == 0) {
+        selectDate = 1;
+        start_date = [date stringWithFormat:@"yyyy-MM-dd"];
+        [_startBtn setTitle:start_date forState:UIControlStateNormal];
+    }else{
+         selectDate = 0;
+        end_date = [date stringWithFormat:@"yyyy-MM-dd"];
+        [_endBtn setTitle:end_date forState:UIControlStateNormal];
+    }
+
+    [UIView animateWithDuration:0.4 animations:^{
+        _bottomView.mj_y = kScreen_height ;
+
+    } ];
+}
+
 -(void)show{
 
     [[UIApplication sharedApplication].keyWindow addSubview:self];
-    [[self viewController] setNeedsStatusBarAppearanceUpdate];
+//    [[self viewController] setNeedsStatusBarAppearanceUpdate];
     [UIView animateWithDuration:0.4 animations:^{
         _topView.mj_y = 0;
         _bottomView.mj_y = kScreen_height - 250;
@@ -278,8 +287,10 @@ static NSString * identifier = @"PickingDateCell" ;
         self.alpha = 0;
         _topView.mj_y = -64;
         _bottomView.mj_y = kScreen_height ;
-
     } completion:^(BOOL finished) {
+        if (self.clickBtn) {
+            _clickBtn(@"",@"",0);
+        }
         [self removeFromSuperview];
     }];
 }
@@ -353,6 +364,33 @@ static NSString * identifier = @"PickingDateCell" ;
     return pick.height;
 }
 
+
+
+// 当开始滚动视图时，执行该方法。一次有效滑动（开始滑动，滑动一小段距离，只要手指不松开，只算一次滑动），只执行一次。
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    //获取开始位置
+    beginContentY = scrollView.contentOffset.y;
+}
+
+// 滑动scrollView，并且手指离开时执行。一次有效滑动，只执行一次。
+// 当pagingEnabled属性为YES时，不调用，该方法
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    //获取结束位置
+    endContentY = scrollView.contentOffset.y;
+    if(endContentY-beginContentY > 20)
+    {
+        if (_bottomView.frame.origin.y < kScreen_height) {
+            [UIView animateWithDuration:0.25 animations:^{
+                _bottomView.mj_y = kScreen_height;
+            }];
+        }
+
+
+    }
+
+}
 #pragma mark - Getters
 
 /**
