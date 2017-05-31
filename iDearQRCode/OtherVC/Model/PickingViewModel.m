@@ -7,23 +7,27 @@
 //
 
 #import "PickingViewModel.h"
-#import "RTNetworking.h"
+//#import "RTNetworking.h"
+#import "YQNetworking.h"
 #import "PickDetailVc.h"
 #import "PickingModel.h"
+
+@interface PickingViewModel ()
+
+@property(nonatomic , assign) NSInteger page;
+
+@end
 @implementation PickingViewModel
 
--(void)fetchPickingList{
-//    [RTNetworking getWithUrl:@"v1/Home/all.json" refreshCache:NO success:^(id response) {
-//
-//        [self loadDataWithSuccessDic:response];
-//
-//    } fail:^(NSError *error) {
-//
-//        self.errorBlock(error);
-//
-//    }];
+-(void)fetchPickingList:(NSInteger)page{
 
-    [self loadDataWithSuccessDic:nil];
+    [YQNetworking postWithUrl:@"http://image.degjsm.cn/EHome/services/api/mobileManager/" refreshRequest:NO cache:NO params:@{@"type": @(4)} progressBlock:nil successBlock:^(id response) {
+        [self loadDataWithSuccessDic:response];
+    } failBlock:^(NSError *error) {
+        self.errorBlock(error);
+    }];
+
+
 }
 
 - (void)loadDataWithSuccessDic:(NSDictionary *)dic{

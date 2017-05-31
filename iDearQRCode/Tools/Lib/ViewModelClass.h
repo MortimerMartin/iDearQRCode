@@ -16,8 +16,8 @@ typedef void (^ErrorCodeBlock) (id errorCode);
 @interface ViewModelClass : NSObject
 
 
-@property (strong, nonatomic) ReturnValueBlock returnBlock;
-@property (strong, nonatomic) ErrorCodeBlock errorBlock;
+@property (copy, nonatomic) ReturnValueBlock returnBlock;
+@property (copy, nonatomic) ErrorCodeBlock errorBlock;
 
 // 传入交互的Block块
 -(void) setBlockWithReturnBlock: (ReturnValueBlock) returnBlock

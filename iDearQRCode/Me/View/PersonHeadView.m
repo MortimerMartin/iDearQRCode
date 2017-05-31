@@ -7,6 +7,7 @@
 //
 
 #import "PersonHeadView.h"
+#import "UserModel.h"
 @interface PersonHeadView ()
 
 @property (nonatomic , strong) UIImageView * backView;
@@ -47,20 +48,14 @@
     [self.backView addSubview:_do_label];
 }
 
--(void)setName:(NSString *)name{
-    _name = name;
-    _name_label.text = name;
+
+-(void)setUserModel:(UserModel *)userModel{
+    _userModel = userModel;
+   _name_label.text = userModel.username;
+    [_headView sd_setImageWithURL:[NSURL URLWithString:userModel.avatar] placeholderImage:[UIImage imageNamed:@""]];
+    _do_label.text =  userModel.userId;
 }
 
--(void)setURL:(NSString *)URL{
-    _URL = URL;
-    [_headView sd_setImageWithURL:[NSURL URLWithString:URL] placeholderImage:[UIImage imageNamed:@""]];
-}
-
--(void)setDoing:(NSString *)doing{
-    _doing = doing;
-    _do_label.text = doing;
-}
 -(void)layoutSubviews{
     [super layoutSubviews];
 

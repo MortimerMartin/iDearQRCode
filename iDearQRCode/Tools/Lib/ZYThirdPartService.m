@@ -9,6 +9,8 @@
 #import "ZYThirdPartService.h"
 #import "IQKeyboardManager.h"
 #import "RTNetworking.h"
+#import "UserModel.h"
+#import "UserManager.h"
 @implementation ZYThirdPartService
 
 +(void)load{
@@ -21,19 +23,21 @@
         [[self class] ls_setKeyBord];
 
         [[self class] ls_testReachableStaus];
+
+        [[self class]  setUserData];
     });
 }
 #pragma mark - 初始化coredata
 + (void)initCoredata {
 
-    [RTNetworking updateBaseUrl:@"https://api.shunliandongli.com"];
-    [RTNetworking enableInterfaceDebug:YES]; //default  NO
+    [RTNetworking updateBaseUrl:@"http://image.degjsm.cn/EHome/services/api/mobileManager/doQueryActivity"];
+    [RTNetworking enableInterfaceDebug:NO]; //default  NO
 
     [RTNetworking configRequestType:kRTRequestTypeJSON
                            responseType:RTResponseTypeData
                     shouldAutoEncodeUrl:YES
                 callbackOnCancelRequest:NO];
-    
+
 }
 
 #pragma mark - 键盘回收相关
@@ -50,6 +54,22 @@
 #pragma mark － 检测网络相关
 + (void)ls_testReachableStaus {
 
+}
+
+
+#pragma mark - 保存用户信息
+
++ (void)setUserData{
+
+    UserModel * user = [[UserModel alloc] init];
+    user.username = @"Mortimer";
+    user.userId = @"007";
+    user.avatar = @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=720891101,4253860064&fm=23&gp=0.jpg";
+    user.nickname = @"没心没肺，没血没泪";
+    user.password = @"mmddd";
+    
+    [UserManager sharedInstance].userData = user;
+    [UserManager saveLocalUserLoginInfo];
 }
 
 @end

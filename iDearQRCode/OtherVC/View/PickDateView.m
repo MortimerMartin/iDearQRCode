@@ -14,6 +14,7 @@
 #import "PickingCell.h"
 #import "PickingModel.h"
 #import "PickingViewModel.h"
+#import "UIView+Toast.h"
 @interface PickDateView ()<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
 {
     BOOL canTouch;
@@ -194,6 +195,7 @@ static NSString * identifier = @"PickingDateCell" ;
             NSDate * start = [NSDate date:start_date WithFormat:@"yyyy-MM-dd"];
             NSDate * end  = [NSDate date:end_date WithFormat:@"yyyy-MM-dd"];
             if ([start isLaterThanDate:end]) {
+                [self makeToast:@"请输入合理的区间" duration:0.5 position:CSToastPositionCenter];
                 return;
             }
 
@@ -217,7 +219,7 @@ static NSString * identifier = @"PickingDateCell" ;
                 
             }];
             
-            [model fetchPickingList];
+            [model fetchPickingList:1];
 
 
 
@@ -342,7 +344,7 @@ static NSString * identifier = @"PickingDateCell" ;
 
 
     cell.pickModel = self.screenArray[indexPath.row];
-    cell.isLastCell = self.screenArray.count - 1 == indexPath.row ? YES : NO;
+//    cell.isLastCell = self.screenArray.count - 1 == indexPath.row ? YES : NO;
 
     return cell;
 

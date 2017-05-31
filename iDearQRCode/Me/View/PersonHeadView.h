@@ -7,11 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class UserModel;
 @interface PersonHeadView : UIView
 
-@property (nonatomic , copy) NSString * URL;
-@property (nonatomic , copy) NSString * name;
-@property (nonatomic , copy) NSString * doing;
+@property (nonatomic , strong) UserModel * userModel;
 
 @end

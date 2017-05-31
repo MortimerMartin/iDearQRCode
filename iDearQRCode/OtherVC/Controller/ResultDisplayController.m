@@ -9,6 +9,8 @@
 #import "ResultDisplayController.h"
 #import "PickingCell.h"
 #import "PickingModel.h"
+//#import "PickDetailVc.h"
+//#import "PreloadDetailVC.h"
 @interface ResultDisplayController ()
 @property (nonatomic , strong) NSMutableArray * results;
 @property (nonatomic , assign) BOOL tableViewStatusStytle;
@@ -64,7 +66,7 @@ static NSString * identifier = @"ResultPickingCell" ;
 
 
     cell.pickModel = self.results[indexPath.row];
-    cell.isLastCell = self.results.count - 1 == indexPath.row  ? YES : NO;
+//    cell.isLastCell = self.results.count - 1 == indexPath.row  ? YES : NO;
 
     return cell;
 }
@@ -77,6 +79,17 @@ static NSString * identifier = @"ResultPickingCell" ;
         return pick.height+10;
     }
     return pick.height;
+}
+
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    if ([_delegate respondsToSelector:@selector(didSelectRow:)]) {
+     
+        [_delegate didSelectRow:indexPath];
+    }
+
+
 }
 
 #pragma mark UISearchResultsUpdating

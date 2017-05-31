@@ -37,12 +37,7 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.backgroundColor = back_Color;
         [self setupDefaultUI];
-//        WeakObj(self);
-//        self.setBtnState = ^{
-//            if (selfWeak.selectBtn) {
-//                [selfWeak.selectBtn setImage:[UIImage imageNamed:@"btn_normal"] forState:UIControlStateNormal];
-//            }
-//        };
+
     }
     return self;
 }
@@ -64,7 +59,7 @@
     _head = [[UIImageView alloc] init];
     _head.layer.cornerRadius = 15.0f;
     _head.layer.masksToBounds = YES;
-    _head.backgroundColor = [UIColor orangeColor];
+//    _head.backgroundColor = [UIColor orangeColor];
     [_bakcView addSubview:_head];
 
     UILabel * (^creatLabel)(UIColor * color,CGFloat font) = ^(UIColor * color,CGFloat font){
@@ -140,22 +135,17 @@
 
 }
 
-//-(void)setIsLastCell:(BOOL)isLastCell{
-//    _isLastCell = isLastCell;
-//    if (isLastCell == YES) {
-//        [_bakcView mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.bottom.equalTo(self.contentView).offset(-10);
-//        }];
-//    }
-//
-//}
+
 
 -(void)setPickModel:(PickingModel *)pickModel{
     _pickModel = pickModel;
 
     [_head sd_setImageWithURL:[NSURL URLWithString:pickModel.URL] placeholderImage:[UIImage imageNamed:@""]];
 
-//    [_selectBtn setImage:[UIImage imageNamed:@"btn_normal"] forState:UIControlStateNormal];
+//    [_head sd_setImageWithURL:[NSURL URLWithString:pickModel.URL] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+//        
+////        [image circleImage];
+//    }];
     _name_label.text = pickModel.pickId;
     _do_label.text = pickModel.doSometing;
     _join_label.text = pickModel.join_time;
@@ -199,7 +189,7 @@
 
                 [rightLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.centerY.equalTo(leftLabel);
-//                    make.top.mas_equalTo(spaceH + i *(spaceH + labH));
+
                     make.right.equalTo(_LabelView);
                     make.width.mas_equalTo(rightSize.width + 8);
                     if (i == pickModel.count -1) {
@@ -254,6 +244,9 @@
     }else{
         self.selectCell = selectCellNormal;
         _selectBtn.hidden = YES;
+        if (_selectBtn.selected == YES) {
+            _selectBtn.selected = NO;
+        }
     }
 }
 

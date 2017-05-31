@@ -44,22 +44,18 @@
         //判断点击的是那个button
         if (btn.tag==[(UIButton *)sender tag])
         {
-//            if (btn.tag == 716 || btn.tag == 717) {
-//                btn.selected = !btn.selected; //不管用，卧槽
-//                if (btn.selected == YES) {
-                    if (self.didClickHandler) {
-                        self.didClickHandler((UPViewtype)btn.tag - 714,sender.selected);
-                    }
-//                }else{
+
+            if ([_delegate respondsToSelector:@selector(didClick:WithSelect:)]) {
+                //如果协议响应了sendvalue：方法
+                //通知代理执行协议的方法
+                [_delegate didClick:(UPViewtype)btn.tag - 714 WithSelect:sender.selected];
+            }
+
 //                    if (self.didClickHandler) {
-//                        self.didClickHandler(UPViewNormal,sender.selected);
+//                        self.didClickHandler((UPViewtype)btn.tag - 714,sender.selected);
 //                    }
-//                }
-//            }else{
-//                if (self.didClickHandler) {
-//                    self.didClickHandler((UPViewtype)btn.tag - 714,sender.selected);
-//                }
-//            }
+
+            
 
 
         }else{

@@ -21,6 +21,7 @@
 
 @property (nonatomic , strong) UIView * combineView;
 
+@property (nonatomic , copy) void(^pickAction)(PickModelType) ;
 @end
 @implementation PickingFootView
 -(instancetype)initWithPickAction:(void(^)(PickModelType ))pick{
@@ -36,14 +37,14 @@
     }
     return self;
 }
-//-(instancetype)initWithFrame:(CGRect)frame{
-//    if (self = [super initWithFrame:frame]) {
-//        self.backgroundColor = [UIColor whiteColor];
-//        [self setupFootView];
-//    }
-//
-//    return self;
-//}
+-(instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor whiteColor];
+        [self setupFootView];
+    }
+
+    return self;
+}
 
 -(void)setupFootView{
 
@@ -88,36 +89,48 @@
     sender.selected = !sender.selected;
     if (sender.selected == YES) {
         [sender setImage:[UIImage imageNamed:@"btn_select_hlight"] forState:UIControlStateNormal];
+
+        if ([_delegate respondsToSelector:@selector(didHandelAction:)]) {
+            [_delegate didHandelAction:PickModelSelectAll];
+        }
         if (self.pickAction) {
             self.pickAction(PickModelSelectAll);
         }
     }else{
         [sender setImage:[UIImage imageNamed:@"btn_select_normal"] forState:UIControlStateNormal];
-        if (self.pickAction) {
-            self.pickAction(PickModelNormal);
+        if ([_delegate respondsToSelector:@selector(didHandelAction:)]) {
+            [_delegate didHandelAction:PickModelNormal];
         }
+//        if (self.pickAction) {
+//            self.pickAction(PickModelNormal);
+//        }
     }
 
 }
 
 -(void)combineAction:(UIButton *)sender{
-    if (self.pickAction) {
-        self.pickAction(PickModelCombine);
+
+    if ([_delegate respondsToSelector:@selector(didHandelAction:)]) {
+        [_delegate didHandelAction:PickModelCombine];
     }
+//    if (self.pickAction) {
+//        self.pickAction(PickModelCombine);
+//    }
 }
 
 -(void)deleteAction:(UIButton *)sender{
-    
-    if (self.pickAction) {
-        self.pickAction(PickModelDelete);
+
+    if ([_delegate respondsToSelector:@selector(didHandelAction:)]) {
+        [_delegate didHandelAction:PickModelDelete];
     }
+//    if (self.pickAction) {
+//        self.pickAction(PickModelDelete);
+//    }
 }
 
 -(void)show:(PickModelType)type{
 
-//    [self remove];
-//    [[self viewController].view addSubview:self];
-//    [[UIApplication sharedApplication].keyWindow addSubview:self];
+
     if (type == PickModelDelete) {
         self.deleteBtn.hidden = NO;
         self.selectAllBtn.hidden = YES;
@@ -127,7 +140,9 @@
         self.selectAllBtn.hidden = NO;
         self.combineBtn.hidden = NO;
     }else{
-
+        self.deleteBtn.hidden = YES;
+        self.selectAllBtn.hidden = YES;
+        self.combineBtn.hidden = YES;
     }
 
     [UIView animateWithDuration:0.5 animations:^{

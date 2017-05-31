@@ -12,12 +12,13 @@
 #import "PickingModel.h"
 #import "PickingFootView.h"
 #import "PickAlert.h"
-#import "ResultDisplayController.h"
+
 #import "PickDateView.h"
 #import "PickDetailVc.h"
 #import "PickingViewModel.h"
-#import "UIScrollView+EmptyDataSet.h"
-@interface PickingVC ()<UITableViewDelegate , UITableViewDataSource ,DZNEmptyDataSetSource,DZNEmptyDataSetDelegate>
+#import "MJRefresh.h"
+#import "AFNetworking.h"
+@interface PickingVC ()<UITableViewDelegate , UITableViewDataSource ,pickingFootViewDelegate,PickingHeadViewDelegate>
 
 @property (nonatomic , assign) UPViewtype  type;
 @property (nonatomic , strong) PickingHeadView * pickHead;
@@ -30,6 +31,7 @@
 @property (nonatomic , strong) PickAlert * pickAlert;
 
 
+@property (nonatomic , assign) NSInteger page;
 
 @end
 
@@ -38,47 +40,20 @@ static NSString * identifier = @"PickingCell" ;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"领料";
-    self.automaticallyAdjustsScrollViewInsets = NO;
+//    self.automaticallyAdjustsScrollViewInsets = NO;
+
     self.type = selectCellNormal;
     [self setupRightItem:@"添加"];
-    [self setupHeadView];
+//    [self setupHeadView];
+    [self setupPickingHeadView];
     [self setupUI];
-    [self loadViewData];
-    [self setupFootView];
-    [self setupSearchView];
+//    [self setupFootView];
+    [self setupPickFootView];
+    [self loadData];
     // Do any additional setup after loading the view.
 }
 
--(void)setupSearchView{
-    ResultDisplayController * result = [[ResultDisplayController alloc] init];
-    WeakObj(self);
-    result.upPickStatusStytle=^{
-          [selfWeak changeStatusBarStyle:NO statusBarHidden:NO changeStatusBarAnimated:NO];
-    };
-    self.searchView = [[UISearchController alloc] initWithSearchResultsController:result];
-    self.searchView.searchResultsUpdater = result;
-    result.datas = [self.dataSource mutableCopy];
 
-    self.searchView.hidesNavigationBarDuringPresentation = NO;
-    self.searchView.searchBar.placeholder = @"搜索";
-
-    self.searchView.searchBar.tintColor = text_Color1;
-    self.searchView.searchBar.barTintColor = [UIColor whiteColor];
-
-    UIView *searchTextField = nil;
-
-    if (iOS7) {
-        searchTextField = [[[self.searchView.searchBar.subviews firstObject] subviews] lastObject];
-    }else{
-        for (UIView * subView in self.searchView.searchBar.subviews) {
-            if ([subView isKindOfClass:NSClassFromString(@"UISearchBarTextField")]) {
-                        searchTextField = subView;
-            }
-        }
-    }
-    searchTextField.backgroundColor = back_Color;
-
-}
 
 -(void)setupUI{
     [self.view addSubview:self.tableView];
@@ -91,35 +66,90 @@ static NSString * identifier = @"PickingCell" ;
         make.top.equalTo(self.pickHead.mas_bottom);
         make.left.right.bottom.equalTo(self.view);
     }];
-    self.tableView.emptyDataSetSource = self;
-    self.tableView.emptyDataSetDelegate = self;
-    self.tableView.sectionFooterHeight = 0.01f;
-    self.tableView.showsVerticalScrollIndicator = NO;
+
 
     [self.tableView registerClass:[PickingCell class] forCellReuseIdentifier:identifier];
 
-
-
-    
-}
-
--(void)loadViewData{
-
     self.type = selectCellNormal;//设置选择状态
 
-    PickingViewModel * model = [[PickingViewModel alloc] init];
-    [model setBlockWithReturnBlock:^(id returnValue) {
-        self.dataSource = returnValue;
-        for (int i = 0; i < self.dataSource.count; i++) {
-             [self.tempArray addObject:@{@"State" : @0}];
-        }
-        [self.tableView reloadData];
-    } WithErrorBlock:^(id errorCode) {
+    __unsafe_unretained UITableView *tableView = self.tableView;
+    //下拉刷新
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
+    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
 
-    }];
+//    // 设置自动切换透明度(在导航栏下面自动隐藏)
+    tableView.mj_header.automaticallyChangeAlpha = YES;
+//
+    self.page = 1;
 
-    [model fetchPickingList];
+
 }
+
+//空白区域点击事件
+-(void)emptyDataSet:(UIScrollView *)scrollView didTapView:(UIView *)view{
+    [self loadData];
+}
+
+
+-(void)loadData{
+    __unsafe_unretained UITableView *tableView = self.tableView;
+    if (self.type == selectCellNormal) {
+        PickingViewModel * model = [[PickingViewModel alloc] init];
+
+                //下拉刷新
+        [model setBlockWithReturnBlock:^(id returnValue) {
+
+
+            self.dataSource = returnValue;
+            [self.tempArray removeAllObjects];
+            for (int i = 0; i < self.dataSource.count; i++) {
+                [self.tempArray addObject:@{@"State" : @0}];
+            }
+                [tableView.mj_header endRefreshing];
+                [tableView reloadData];
+            } WithErrorBlock:^(id errorCode) {
+                [tableView.mj_header endRefreshing];
+            }];
+                
+            [model fetchPickingList:1];
+    }else{
+        [tableView.mj_header endRefreshing];
+    }
+
+
+}
+
+-(void)loadMoreData{
+    __unsafe_unretained UITableView *tableView = self.tableView;
+
+    if (self.type == selectCellNormal) {
+        PickingViewModel * model = [[PickingViewModel alloc] init];
+        [model setBlockWithReturnBlock:^(id returnValue) {
+            [self.dataSource addObjectsFromArray:returnValue];
+            for (int i = 0; i < self.dataSource.count; i++) {
+                [self.tempArray addObject:@{@"State" : @0}];
+            }
+            // 结束刷新
+            [tableView.mj_footer endRefreshing];
+            [tableView reloadData];
+        } WithErrorBlock:^(id errorCode) {
+            if (self.page<=1) {
+                self.page = 1;
+            }else{
+                self.page--;
+            }
+            // 结束刷新
+            [tableView.mj_footer endRefreshing];
+        }];
+        self.page++;
+        [model fetchPickingList:self.page];
+    }else{
+                    // 结束刷新
+        [tableView.mj_footer endRefreshing];
+        
+    }
+}
+
 
 #pragma mark  UITableViewDataSource
 
@@ -145,7 +175,7 @@ static NSString * identifier = @"PickingCell" ;
 
         cell.state = _changeRightItem;
         cell.index = indexPath.row;
-        cell.isLastCell = (indexPath.row == self.dataSource.count - 1) ? YES : NO;
+
         WeakObj(self);
         cell.selectCellAction = ^(PickingModel * model,BOOL select,selectCellType type,NSUInteger index){
             NSMutableArray * newArray = [selfWeak.tempArray mutableCopy];
@@ -169,40 +199,24 @@ static NSString * identifier = @"PickingCell" ;
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    PickingModel * pick = self.dataSource[indexPath.row];
-    PickingViewModel * View =[[PickingViewModel alloc] init];
-    [View pushDetailWithVC:self didSelectRowAtPickId:pick.pickId];
+    if (self.type == selectCellNormal) {
+        PickingModel * pick = self.dataSource[indexPath.row];
+        PickingViewModel * View =[[PickingViewModel alloc] init];
+        [View pushDetailWithVC:self didSelectRowAtPickId:pick.pickId];
+    }
+
 
 }
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    PickingModel * pick = self.dataSource[indexPath.row];
 
+    PickingModel * pick = self.dataSource[indexPath.row];
     return pick.height;
 }
 
 
-#pragma mark DZNEmptyDataSetSource
-//返回图片
-//-(UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView{
-//
-//}
-//返回标题文字
--(NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView{
-    NSString *text = @"没有数据";
-    NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:18.0], NSForegroundColorAttributeName: text_Color1};
-    return [[NSAttributedString alloc] initWithString:text attributes:attribute];
-}
-//空白区域点击事件
--(void)emptyDataSet:(UIScrollView *)scrollView didTapView:(UIView *)view{
 
-}
-
--(UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView{
-
-    return back_Color;
-}
 
 #pragma mark RightItemAction
 
@@ -231,195 +245,199 @@ static NSString * identifier = @"PickingCell" ;
     }
 
 }
+#pragma mark 设置头视图以及各个功能
 
--(void)setupHeadView{
-
-        PickingHeadView * pick = [[PickingHeadView alloc] initWithFrame:CGRectMake(0, 0, kScreen_width, 40)];
-        [self.view addSubview:pick];
-        __weak typeof(self.tableView) weakSelfTableView = self.tableView;
-        pick.didClickHandler = ^(UPViewtype type,BOOL isSelect){
-            switch (type) {
-                case UPViewSearchType:
-                {
-
-                    if (self.type == UPViewDeleteType || self.type == UPViewCombineType) {
-                        return ;
-                    }
-
-                    [self changeStatusBarStyle:YES statusBarHidden:NO changeStatusBarAnimated:NO];
-                    [self presentViewController:self.searchView animated:YES completion:^{
-
-                    }];
-                }
-                    break;
-                case UPViewScreenType:
-                {
-                    if (self.type == UPViewDeleteType || self.type == UPViewCombineType) {
-                        return ;
-                    }
-
-                    [self changeStatusBarStyle:YES statusBarHidden:NO changeStatusBarAnimated:NO];
-                    WeakObj(self);
-                    PickDateView * date = [[PickDateView alloc] initWithScreenDate:^(NSString * state, NSString * end,NSInteger index) {
-                        switch (index) {
-                            case 0:
-                                {
-                                      [self changeStatusBarStyle:NO statusBarHidden:NO changeStatusBarAnimated:YES];
-                                }
-                                break;
-                            case 1:
-                                {
-
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    }];
-                    date.didSelectCell = ^(NSString * pickId){
-                        PickDetailVc * detial = [[PickDetailVc alloc] init];
-                        [selfWeak.navigationController pushViewController:detial animated:YES];
-                    };
-                    [date show];
-
-                }
-                    break;
-                case UPViewDeleteType:
-                {
-                    if (self.type == UPViewDeleteType) {
-                        return ;
-                    }
-
-                    self.changeRightItem = 1;
-                    self.type = UPViewDeleteType;
-                    [self setupRightItem:@"取消"];
-                    [self setCellState:selectCellNormal];
-                    [_pickFoot show:PickModelDelete];
-                    [weakSelfTableView reloadData];
-                }
-                    break;
-                case UPViewCombineType:
-                {
-                    if (self.type == UPViewCombineType) {
-                        return ;
-                    }
-
-                    self.type = UPViewCombineType;
-                     [self setupRightItem:@"取消"];
-                    self.changeRightItem = 2;
-                    [self setCellState:selectCellNormal];
-                     [_pickFoot show:PickModelCombine];
-                    [weakSelfTableView reloadData];
-                }
-                    break;
-
-                case UPViewNormal:
-                {
-                    [self setCellState:selectCellNormal];
-                    [_pickFoot dismiss];
-                    [weakSelfTableView reloadData];
-                }
-                    break;
-                default:
-                    break;
-            }
-
-        };
-    _pickHead = pick;
-
-}
-
--(void)setupFootView{
-
-//    WeakObj(self);
-    PickingFootView * pick = [[PickingFootView alloc] initWithPickAction:^(PickModelType type) {
-        switch (type) {
-            case PickModelNormal:
-                {
-                    [self.selectArray removeAllObjects];
-                    [self setCellState:selectCellNormal];
-                    [self.tableView reloadData];
-                }
-                break;
-            case PickModelDelete:
-            {
-                   if (self.selectArray.count>0) {
-                       PickAlert * alert = [[PickAlert alloc] initWithPickTitle:[NSString stringWithFormat:@"是否确定删除这%ld项",self.selectArray.count] AlertAction:@[@"取消",@"确定"] Complete:^(NSInteger index) {
-                           if (index == 1) {
-
-
-                               for (int j = 0; j <self.selectArray.count; j++) {
-                                   for (int i = 0; i<self.dataSource.count; i++) {
-                                       PickingModel * pick = self.dataSource[i];
-                                       if ([pick.pickId isEqualToString:self.selectArray[j]]) {
-                                           [self.dataSource removeObjectAtIndex:i];
-                                           NSLog(@"%d",j);
-                                       }
-                                   }
-                               }
-                            [self resetDefaultSeting];
-
-
-
-                           }
-                       }];
-
-                       [alert showAlert];
-                       _pickAlert = alert;
-                    }
-            }
-                break;
-            case PickModelCombine:
-            {
-                    if (self.selectArray.count>0) {
-                        PickAlert * alert = [[PickAlert alloc] initWithPickTitle:self.dataSource.count == self.selectArray.count ? [NSString stringWithFormat:@"是否确定合并全部%ld项",self.selectArray.count] : [NSString stringWithFormat:@"是否确定合并这%ld项",self.selectArray.count] AlertAction:@[@"取消",@"确定"] Complete:^(NSInteger index) {
-                            if (index == 1) {
-
-
-                                for (int j = 0; j <self.selectArray.count; j++) {
-                                    for (int i = 0; i<self.dataSource.count; i++) {
-                                        PickingModel * pick = self.dataSource[i];
-                                        if ([pick.pickId isEqualToString:self.selectArray[j]]) {
-                                            [self.dataSource removeObjectAtIndex:i];
-                                            NSLog(@"%d",j);
-                                        }
-                                    }
-                                }
-                                [self resetDefaultSeting];
-                            }
-
-
-
-                        }];
-
-                        [alert showAlert];
-                        _pickAlert = alert;
-                    }
-            }
-                break;
-            case PickModelSelectAll:
-            {
-                [self.selectArray removeAllObjects];
-                for (int i = 0; i<self.dataSource.count; i++) {
-                    PickingModel * model = self.dataSource[i];
-                    [self.selectArray addObject:model.pickId];
-                }
-                [self setCellState:selectCellCombine];
-                [self.tableView reloadData];
-
-            }
-                break;
-            default:
-                break;
-        }
-    }];
+-(void)setupPickingHeadView{
+    PickingHeadView * pick = [[PickingHeadView alloc] initWithFrame:CGRectMake(0, 0, kScreen_width, 40)];
+    pick.delegate = self;
     [self.view addSubview:pick];
-    _pickFoot = pick;
+     _pickHead = pick;
+}
+
+#pragma mark PickingHeadViewDelegae
+-(void)didClick:(UPViewtype)type WithSelect:(BOOL)select{
+    switch (type) {
+        case UPViewSearchType:
+        {
+
+            if (self.type == UPViewDeleteType || self.type == UPViewCombineType) {
+                return ;
+            }
+            [self upResultViewData];
+            [self changeStatusBarStyle:YES statusBarHidden:NO changeStatusBarAnimated:NO];
+            [self presentViewController:self.searchView animated:YES completion:nil];
+        }
+            break;
+        case UPViewScreenType:
+        {
+            if (self.type == UPViewDeleteType || self.type == UPViewCombineType) {
+                return ;
+            }
+
+            [self changeStatusBarStyle:YES statusBarHidden:NO changeStatusBarAnimated:NO];
+
+
+            PickDateView * date = [[PickDateView alloc] initWithScreenDate:^(NSString * state, NSString * end,NSInteger index) {
+                switch (index) {
+                    case 0:
+                    {
+                        [self changeStatusBarStyle:NO statusBarHidden:NO changeStatusBarAnimated:YES];
+                    }
+                        break;
+                    case 1:
+                    {
+
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }];
+            date.didSelectCell = ^(NSString * pickId){
+                PickDetailVc * detial = [[PickDetailVc alloc] init];
+                [self.navigationController pushViewController:detial animated:YES];
+            };
+            [date show];
+
+        }
+            break;
+        case UPViewDeleteType:
+        {
+            if (self.type == UPViewDeleteType || self.type == UPViewCombineType) {
+                return ;
+            }
+
+            self.changeRightItem = 1;
+            self.type = UPViewDeleteType;
+            [self setupRightItem:@"取消"];
+            [self setCellState:selectCellNormal];
+            [self.pickFoot show:PickModelDelete];
+            [self.tableView reloadData];
+        }
+            break;
+        case UPViewCombineType:
+        {
+            if (self.type == UPViewCombineType || self.type == UPViewDeleteType ) {
+                return ;
+            }
+
+            self.type = UPViewCombineType;
+            [self setupRightItem:@"取消"];
+            self.changeRightItem = 2;
+            [self setCellState:selectCellNormal];
+            [self.pickFoot show:PickModelCombine];
+            [self.tableView reloadData];
+        }
+            break;
+
+        case UPViewNormal:
+        {
+            [self setCellState:selectCellNormal];
+            [self.pickFoot dismiss];
+            [self.tableView reloadData];
+        }
+            break;
+        default:
+            break;
+    }
 
 }
 
+#pragma mark 设置footView及各项功能
+
+-(void)setupPickFootView{
+    PickingFootView * pickFoot = [[PickingFootView alloc] initWithFrame:CGRectMake(0, kScreen_height, kScreen_width, 60)];
+    pickFoot.delegate = self;
+    [self.view addSubview:pickFoot];
+    _pickFoot = pickFoot;
+}
+#pragma mark PickingFootViewDelegate
+
+-(void)didHandelAction:(PickModelType)type{
+
+    switch (type) {
+        case PickModelNormal:
+        {
+            [self.selectArray removeAllObjects];
+            [self setCellState:selectCellNormal];
+            [self.tableView reloadData];
+        }
+            break;
+        case PickModelDelete:
+        {
+            if (self.selectArray.count>0) {
+                PickAlert * alert = [[PickAlert alloc] initWithPickTitle:[NSString stringWithFormat:@"是否确定删除这%ld项",self.selectArray.count] AlertAction:@[@"取消",@"确定"] Complete:^(NSInteger index) {
+                    if (index == 1) {
 
 
+                        for (int j = 0; j <self.selectArray.count; j++) {
+                            for (int i = 0; i<self.dataSource.count; i++) {
+                                PickingModel * pick = self.dataSource[i];
+                                if ([pick.pickId isEqualToString:self.selectArray[j]]) {
+                                    [self.dataSource removeObjectAtIndex:i];
+
+                                }
+                            }
+                        }
+                        [self resetDefaultSeting];
+
+
+
+                    }
+                }];
+
+                [alert showAlert];
+                _pickAlert = alert;
+            }
+        }
+            break;
+        case PickModelCombine:
+        {
+            if (self.selectArray.count>0) {
+                PickAlert * alert = [[PickAlert alloc] initWithPickTitle:self.dataSource.count == self.selectArray.count ? [NSString stringWithFormat:@"是否确定合并全部%ld项",self.selectArray.count] : [NSString stringWithFormat:@"是否确定合并这%ld项",self.selectArray.count] AlertAction:@[@"取消",@"确定"] Complete:^(NSInteger index) {
+                    if (index == 1) {
+
+
+                        for (int j = 0; j <self.selectArray.count; j++) {
+                            for (int i = 0; i<self.dataSource.count; i++) {
+                                PickingModel * pick = self.dataSource[i];
+                                if ([pick.pickId isEqualToString:self.selectArray[j]]) {
+                                    [self.dataSource removeObjectAtIndex:i];
+
+                                }
+                            }
+                        }
+                        [self resetDefaultSeting];
+                    }
+
+
+
+                }];
+
+                [alert showAlert];
+                _pickAlert = alert;
+            }
+        }
+            break;
+        case PickModelSelectAll:
+        {
+            [self.selectArray removeAllObjects];
+            for (int i = 0; i<self.dataSource.count; i++) {
+                PickingModel * model = self.dataSource[i];
+                [self.selectArray addObject:model.pickId];
+            }
+            [self setCellState:selectCellCombine];
+            [self.tableView reloadData];
+
+        }
+            break;
+        default:
+            break;
+    }
+
+}
+
+//设置cell的选中状态
 -(void)setCellState:(selectCellType)type{
     NSMutableArray * newArray = [self.tempArray mutableCopy];
     for (int i = 0; i<self.dataSource.count; i++) {
@@ -427,7 +445,7 @@ static NSString * identifier = @"PickingCell" ;
     }
     self.tempArray = newArray;
 }
-
+//删除选中数组里面的取消的
 -(void)deleteObjc:(NSString *)pickId{
     for (int i = 0; i< self.selectArray.count; i++) {
         if ([pickId isEqualToString:self.selectArray[i]]) {
@@ -463,10 +481,6 @@ static NSString * identifier = @"PickingCell" ;
     [_pickAlert remove];
 
 }
-
-//-(UIStatusBarStyle)preferredStatusBarStyle{
-//    return self.statusStytle == YES ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
-//}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

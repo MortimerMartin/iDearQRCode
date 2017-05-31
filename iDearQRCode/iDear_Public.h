@@ -11,7 +11,8 @@
 
 // 1.判断是否为iOS7
 #define iOS7 ([[UIDevice currentDevice].systemVersion doubleValue] >= 7.0)
-
+//获取系统版本
+#define IOS_SYSTEM_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
 // 2.获得RGB颜色
 #define RGBA(r, g, b, a)                    [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
 #define RGB(r, g, b)                        RGBA(r, g, b, 1.0f)
@@ -25,6 +26,9 @@
 #define line_Color RGB(201, 205, 205)
 //组长
 #define do_Color RGB(160, 226, 224)
+
+#define topView_Color RGB(15, 194, 175)
+//#define promit_Color RGB(15, 194, 175)
 //字体
 #define kFont_16 [UIFont systemFontOfSize:16]
 #define kFont_14 [UIFont systemFontOfSize:14]

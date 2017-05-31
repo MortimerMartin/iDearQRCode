@@ -9,9 +9,10 @@
 #import "QRCViewController.h"
 #import "SheetView.h"
 #import "personViewController.h"
-#import "UIImage+Normalimage.h"
+#import "UIImage+Common.h"
 
 #import "PickingVC.h"
+#import "PreloadViewController.h"
 @interface QRCViewController ()
 {
    UIView *_autoMarginViews;
@@ -112,7 +113,9 @@
             break;
         case 1:
         {
-            NSLog(@"1");
+            PreloadViewController * preload = [[PreloadViewController alloc] init];
+            [self.navigationController pushViewController:preload animated:YES];
+
         }
             break;
         case 2:

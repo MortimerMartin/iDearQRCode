@@ -11,11 +11,17 @@
 #import "PersonHeadView.h"
 #import "AlertManager.h"
 #import "UIView+Toast.h"
-
+#import "UserManager.h"
+#import "UserModel.h"
 @interface personViewController ()<UITableViewDelegate , UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     UIView * alphaView;
+    CGFloat _alpha;
 }
+
+@property (nonatomic , strong) UITableView * personView;
+//@property (nonatomic , strong) UserModel * user;
+
 @end
 
 @implementation personViewController
@@ -28,16 +34,15 @@ static NSString * identifier = @"PersonTableViewCell" ;
     [self setupRightItem:@"更换头像"];
     [self setupTableView];
 
+//    self.user = [UserManager sharedInstance].userData;
+
 }
 
 -(void)setupTableView{
-    [self.view addSubview:self.tableView];
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.personView];
+    [self.personView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).with.insets(UIEdgeInsetsMake(-64, 0, 0, 0));
     }];
-//    self.tableView.sd_layout.topSpaceToView(self.view,-64).leftEqualToView(self.view).rightEqualToView(self.view).bottomEqualToView(self.view);
-    self.tableView.sectionFooterHeight = 0.01f;
-    self.tableView.scrollEnabled = NO;
     self.dataSource = [NSMutableArray arrayWithArray:@[@[@"部门",@"职位",@"入职时间"],@[@"生产二部",@"组长",@"2014-06-12"]]];
 }
 
@@ -68,8 +73,7 @@ static NSString * identifier = @"PersonTableViewCell" ;
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     PersonHeadView * head = [[PersonHeadView alloc] initWithFrame:CGRectMake(0, 0, kScreen_width, 300)];
     head.backgroundColor = [UIColor grayColor];
-    head.name = @"Mortimer";
-    head.doing = @"Martin";
+    head.userModel = [UserManager sharedInstance].userData;
     return head;
 }
 
@@ -211,6 +215,33 @@ static NSString * identifier = @"PersonTableViewCell" ;
 //        }
 //    }
 //}
+
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    _alpha = offsetY / 90 < 1 ? offsetY / 90 : 1;
+    [self.navigationController.navigationBar.subviews[0] setAlpha:_alpha];
+}
+
+
+- (UITableView * )personView{
+    if (!_personView){
+        _personView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStyleGrouped];
+        _personView.delegate = self;
+        _personView.dataSource = self;
+        _personView.tableFooterView = [UIView new];
+
+        _personView.backgroundColor = [UIColor colorWithHexString:@"#eff4f4"];
+
+        _personView.showsVerticalScrollIndicator = NO;
+        // 5.设置分割线样式
+        _personView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
+
+    return _personView;
+    
+}
 /*
 #pragma mark - Navigation
 

@@ -53,4 +53,10 @@
                  titleFont:(UIFont*)titleFont
          leftBarButtonItem:(UIBarButtonItem*)leftItem
         rightBarButtonItem:(UIBarButtonItem*)rightItem;
+
+
+/**
+    刷新ResultVC的数据
+ */
+-(void)upResultViewData;
 @end

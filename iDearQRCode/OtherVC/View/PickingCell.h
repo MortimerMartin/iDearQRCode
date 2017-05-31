@@ -19,7 +19,7 @@ typedef enum {
 
 @property (nonatomic , strong) PickingModel * pickModel;
 
-@property (nonatomic , assign) BOOL isLastCell;
+
 @property (nonatomic , assign) NSInteger state;
 @property (nonatomic , assign) NSUInteger index;
 
@@ -27,8 +27,6 @@ typedef enum {
 
 @property (nonatomic , copy) void (^selectCellAction)(PickingModel * ,BOOL ,selectCellType,NSUInteger) ;
 
-//@property (nonatomic , assign) NSInteger state;
 
-//@property (nonatomic , copy) void(^setBtnState)();
 
 @end

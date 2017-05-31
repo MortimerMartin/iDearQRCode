@@ -15,12 +15,23 @@ typedef NS_ENUM(NSInteger, PickModelType) {
     PickModelCombine
 };
 
+
+@protocol pickingFootViewDelegate <NSObject>
+
+@required
+
+-(void)didHandelAction:(PickModelType)type;
+
+@end
 @interface PickingFootView : UIView
 
 -(instancetype)initWithPickAction:(void(^)(PickModelType type))pick;
 
 
-@property (nonatomic , copy) void(^pickAction)(PickModelType) ;
+
+@property (nonatomic , weak) id<pickingFootViewDelegate> delegate;
+
+
 
 
 

@@ -15,8 +15,23 @@ typedef enum {
     UPViewCombineType,
     UPViewNormal
 } UPViewtype;
+
+
+//类名＋delegate
+@protocol PickingHeadViewDelegate <NSObject>
+-(void)didClick:(UPViewtype)type WithSelect:(BOOL)select;
+//代理方法必须实现的方法
+@required
+
+//代理方法可选实现的方法
+@optional
+
+@end
 @interface PickingHeadView : UIView
 
-@property (nonatomic , copy) void(^didClickHandler)(UPViewtype,BOOL) ;
+@property (nonatomic , weak) id<PickingHeadViewDelegate>  delegate;
+
+
+//@property (nonatomic , copy) void(^didClickHandler)(UPViewtype,BOOL) ;
 
 @end
