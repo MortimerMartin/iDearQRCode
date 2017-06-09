@@ -68,6 +68,7 @@
 		114829261ECC1DEC00BBCBF3 /* PickingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 114829251ECC1DEC00BBCBF3 /* PickingCell.m */; };
 		114829291ECC1E0000BBCBF3 /* PickingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 114829281ECC1E0000BBCBF3 /* PickingModel.m */; };
 		1148292C1ECC222F00BBCBF3 /* PickingHeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1148292B1ECC222F00BBCBF3 /* PickingHeadView.m */; };
+		115A0FB71EEAA0D60090188D /* LocalArchiverManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 115A0FB61EEAA0D60090188D /* LocalArchiverManager.m */; };
 		1179FBE71ED56E5D0071ED45 /* PreloadDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1179FBE61ED56E5D0071ED45 /* PreloadDetailView.m */; };
 		1179FBEA1ED577570071ED45 /* PreloadDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1179FBE91ED577570071ED45 /* PreloadDetailCell.m */; };
 		118E68EF1ED92C9300B62015 /* YQNetworking+RequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 118E68EE1ED92C9300B62015 /* YQNetworking+RequestManager.m */; };
@@ -567,6 +568,8 @@
 		114829281ECC1E0000BBCBF3 /* PickingModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickingModel.m; sourceTree = "<group>"; };
 		1148292A1ECC222F00BBCBF3 /* PickingHeadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickingHeadView.h; sourceTree = "<group>"; };
 		1148292B1ECC222F00BBCBF3 /* PickingHeadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickingHeadView.m; sourceTree = "<group>"; };
+		115A0FB51EEAA0D60090188D /* LocalArchiverManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalArchiverManager.h; sourceTree = "<group>"; };
+		115A0FB61EEAA0D60090188D /* LocalArchiverManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalArchiverManager.m; sourceTree = "<group>"; };
 		1179FBE51ED56E5D0071ED45 /* PreloadDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreloadDetailView.h; sourceTree = "<group>"; };
 		1179FBE61ED56E5D0071ED45 /* PreloadDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreloadDetailView.m; sourceTree = "<group>"; };
 		1179FBE81ED577570071ED45 /* PreloadDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreloadDetailCell.h; sourceTree = "<group>"; };
@@ -1829,6 +1832,8 @@
 				118E69061ED94DC900B62015 /* UserManager.m */,
 				118E69081ED951BF00B62015 /* KeyManager.h */,
 				118E69091ED951BF00B62015 /* KeyManager.m */,
+				115A0FB51EEAA0D60090188D /* LocalArchiverManager.h */,
+				115A0FB61EEAA0D60090188D /* LocalArchiverManager.m */,
 			);
 			path = UserManager;
 			sourceTree = "<group>";
@@ -3587,6 +3592,7 @@
 				119AB2C21ED15E87003DBF5A /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				11E3E9651ECA9A3400D72EE1 /* SheetViewCell.m in Sources */,
 				1121C0361EC9C1300002D73C /* NSArray+MASAdditions.m in Sources */,
+				115A0FB71EEAA0D60090188D /* LocalArchiverManager.m in Sources */,
 				11E3E9951ECAA6F600D72EE1 /* MJRefreshAutoFooter.m in Sources */,
 				11F7AE461ED4043F00A9F224 /* LBXScanWrapper.m in Sources */,
 				11F7B0541ED40AB300A9F224 /* ZXProductResultParser.m in Sources */,

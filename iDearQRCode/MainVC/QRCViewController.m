@@ -13,6 +13,8 @@
 
 #import "PickingVC.h"
 #import "PreloadViewController.h"
+#import "UserModel.h"
+#import "LocalArchiverManager.h"
 @interface QRCViewController ()
 {
    UIView *_autoMarginViews;
@@ -30,6 +32,17 @@
     [self setLeftNavigationItem];
     [self setupAutoMarginViewsWithCount:4 itemWidth:kScreen_width/2];
     [self setupAddBtn];
+
+//    LocalArchiverManager * manager = [LocalArchiverManager shareManagement];
+//
+//    UserModel * model1 = [manager archiverQueryAPIKey:@"list"];
+//
+//
+//    UserModel * model = [[UserModel alloc] init];
+//    model.username = @"你大爷";
+//    model.password = @"111";
+//
+//    [manager saveDataArchiver:model andAPIKey:@"list"];
     // Do any additional setup after loading the view.
 }
 
