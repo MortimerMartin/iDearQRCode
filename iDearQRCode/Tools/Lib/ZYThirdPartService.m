@@ -30,7 +30,7 @@
 #pragma mark - 初始化coredata
 + (void)initCoredata {
 
-    [RTNetworking updateBaseUrl:@"http://image.degjsm.cn/EHome/services/api/mobileManager/doQueryActivity"];
+    [RTNetworking updateBaseUrl:@"http://image.degjsm.cn/EHome/services/api/mobileManager/"];
     [RTNetworking enableInterfaceDebug:NO]; //default  NO
 
     [RTNetworking configRequestType:kRTRequestTypeJSON

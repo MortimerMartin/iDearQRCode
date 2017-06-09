@@ -24,7 +24,10 @@
 
 
    [RTNetworking postWithUrl:@"doQueryActivity" refreshCache:NO params:@{@"type": @(4)} success:^(id response) {
-        [self loadDataWithSuccessDic:nil];
+//       if (response) {
+       [self loadDataWithSuccessDic:nil];
+//       }
+
 
 
 

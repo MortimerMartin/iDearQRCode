@@ -72,76 +72,16 @@ static NSString * identifier = @"PrereloadCell";
     self.type = selectCellNormal;//设置选择状态
 
     __unsafe_unretained UITableView *tableView = self.tableView;
-//    __unsafe_unretained typeof(self) weakSelf = self;
     //下拉刷新
-    PreloadViewModel * model = [[PreloadViewModel alloc] init];
-    tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
+    self.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
 
-
-        if (self.type == selectCellNormal) {
-            [model setBlockWithReturnBlock:^(id returnValue) {
-
-
-                self.dataSource = returnValue;
-                [self.tempArray removeAllObjects];
-                for (int i = 0; i < self.dataSource.count; i++) {
-                    [self.tempArray addObject:@{@"State" : @0}];
-                }
-                [tableView.mj_header endRefreshing];
-                [tableView reloadData];
-            } WithErrorBlock:^(id errorCode) {
-                [tableView.mj_header endRefreshing];
-            }];
-            
-            
-            
-            [model loadPreViewData:1];
-        }else{
-            [tableView.mj_header endRefreshing];
-        }
-
-
-
-    }];
-
-    // 设置自动切换透明度(在导航栏下面自动隐藏)
+    //    // 设置自动切换透明度(在导航栏下面自动隐藏)
     tableView.mj_header.automaticallyChangeAlpha = YES;
-
+    //
     self.page = 1;
-    // 上拉刷新
-    tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
-//        PreloadViewModel * model = [[PreloadViewModel alloc] init];
-
-        if (self.type == selectCellNormal) {
-            [model setBlockWithReturnBlock:^(id returnValue) {
-                NSArray * tempArray = returnValue;
-                [self.dataSource addObjectsFromArray:returnValue];
-                for (int i = 0; i < tempArray.count; i++) {
-                    [self.tempArray addObject:@{@"State" : @0}];
-                }
-                // 结束刷新
-                [tableView.mj_footer endRefreshing];
-                [tableView reloadData];
-            } WithErrorBlock:^(id errorCode) {
-                if (self.page<=1) {
-                    self.page = 1;
-                }else{
-                    self.page--;
-                }
-                // 结束刷新
-                [tableView.mj_footer endRefreshing];
-            }];
-            
-            self.page++;
-            [model loadPreViewData:self.page];
-        }else{
-            [tableView.mj_footer endRefreshing];
-        }
-
-        
-        
-    }];
-
+    
+    
 }
 
 //空白区域点击事件
@@ -150,29 +90,68 @@ static NSString * identifier = @"PrereloadCell";
 }
 
 
+
 -(void)loadData{
-    PreloadViewModel * model = [[PreloadViewModel alloc] init];
+    __unsafe_unretained UITableView *tableView = self.tableView;
+    if (self.type == selectCellNormal) {
+        PreloadViewModel * model = [[PreloadViewModel alloc] init];
 
 
-    [model setBlockWithReturnBlock:^(id returnValue) {
+        [model setBlockWithReturnBlock:^(id returnValue) {
 
 
-        self.dataSource = returnValue;
-        [self.tempArray removeAllObjects];
-        for (int i = 0; i < self.dataSource.count; i++) {
-            [self.tempArray addObject:@{@"State" : @0}];
-        }
+            self.dataSource = returnValue;
+            [self.tempArray removeAllObjects];
+            for (int i = 0; i < self.dataSource.count; i++) {
+                [self.tempArray addObject:@{@"State" : @0}];
+            }
 
-        [self.tableView reloadData];
-    } WithErrorBlock:^(id errorCode) {
+            [self.tableView reloadData];
+        } WithErrorBlock:^(id errorCode) {
+            
+        }];
+        
+        
+        
+        [model loadPreViewData:1];
+    }else{
+        [tableView.mj_header endRefreshing];
+    }
 
-    }];
 
+}
 
+-(void)loadMoreData{
+    __unsafe_unretained UITableView *tableView = self.tableView;
 
-    [model loadPreViewData:1];
+    if (self.type == selectCellNormal) {
+        PreloadViewModel * model = [[PreloadViewModel alloc] init];
+        [model setBlockWithReturnBlock:^(id returnValue) {
+            NSArray * tempArray = returnValue;
+            [self.dataSource addObjectsFromArray:returnValue];
+            for (int i = 0; i < tempArray.count; i++) {
+                [self.tempArray addObject:@{@"State" : @0}];
+            }
+            // 结束刷新
+            [tableView.mj_footer endRefreshing];
+            [tableView reloadData];
+        } WithErrorBlock:^(id errorCode) {
+            if (self.page<=1) {
+                self.page = 1;
+            }else{
+                self.page--;
+            }
+            // 结束刷新
+            [tableView.mj_footer endRefreshing];
+        }];
 
-//    _DataManager = model;
+        self.page++;
+        [model loadPreViewData:self.page];
+    }else{
+        // 结束刷新
+        [tableView.mj_footer endRefreshing];
+
+    }
 }
 
 #pragma mark  UITableViewDataSource

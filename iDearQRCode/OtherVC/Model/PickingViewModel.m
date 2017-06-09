@@ -21,8 +21,11 @@
 
 -(void)fetchPickingList:(NSInteger)page{
 
-    [YQNetworking postWithUrl:@"http://image.degjsm.cn/EHome/services/api/mobileManager/" refreshRequest:NO cache:NO params:@{@"type": @(4)} progressBlock:nil successBlock:^(id response) {
+    [YQNetworking postWithUrl:@"http://image.degjsm.cn/EHome/services/api/mobileManager/doQueryActivity" refreshRequest:NO cache:NO params:@{@"type": @(4)} progressBlock:nil successBlock:^(id response) {
+        if (response) {
         [self loadDataWithSuccessDic:response];
+        }
+
     } failBlock:^(NSError *error) {
         self.errorBlock(error);
     }];

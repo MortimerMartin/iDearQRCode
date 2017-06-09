@@ -35,12 +35,16 @@
 #define kFont_12 [UIFont systemFontOfSize:12]
 
 
+
 // 3.是否为4inch
 #define fourInch ([UIScreen mainScreen].bounds.size.height == 568)
 
 // 4.屏幕大小尺寸
-#define kScreen_width [UIScreen mainScreen].bounds.size.width
+#define kScreen_width ([UIScreen mainScreen].bounds.size.width)
 #define kScreen_height [UIScreen mainScreen].bounds.size.height
+
+//根据ip6的屏幕来拉伸
+//#define kRealValue(with) ((with)*(kScreen_width/375.0f))
 
 //重新设定view的Y值
 #define setFrameY(view, newY) view.frame = CGRectMake(view.frame.origin.x, newY, view.frame.size.width, view.frame.size.height)
@@ -58,7 +62,6 @@
 #define APPDELEGATE ((AppDelegate *)[UIApplication sharedApplication].delegate)
 
 #define WeakObj(self) __weak typeof(self) self##Weak = self;
-
 //7.
 #define IOS_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
 
@@ -67,4 +70,11 @@
 
 
 #define kGetTEXTSIZE(text, font) [text length] > 0 ? [text sizeWithAttributes:@{NSFontAttributeName:font}] : CGSizeZero
+
+//定义UIImage对象
+
+#define ImageWithFile(_pointer)[UIImage imageWithContentsOfFile:([[NSBundle mainBundle]pathForResource:[NSString stringWithFormat:@"%@@%dx",_pointer,(int)[UIScreen mainScreen].nativeScale]ofType:@"png"])]
+
+#define IMAGE_NAMED(name)[UIImage imageNamed:name]
+
 #endif /* iDear_Public_h */
