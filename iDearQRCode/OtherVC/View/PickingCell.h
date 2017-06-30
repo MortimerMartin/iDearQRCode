@@ -22,11 +22,17 @@ typedef enum {
 
 @property (nonatomic , assign) NSInteger state;
 @property (nonatomic , assign) NSUInteger index;
-
 @property (nonatomic , assign) selectCellType selectType;
+
 
 @property (nonatomic , copy) void (^selectCellAction)(PickingModel * ,BOOL ,selectCellType,NSUInteger) ;
 
 
+/**
+ 初始化cell
 
+ @param tableview tableview
+ @return cell
+ */
+//+(instancetype)instancedCell:(UITableView *)tableview;
 @end

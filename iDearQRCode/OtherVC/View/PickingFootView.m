@@ -58,7 +58,15 @@
 
     [self addSubview:self.deleteBtn = creatBtn(@"btn_delete_Normal",@"btn_delete_Helight")];
     [self addSubview:self.combineBtn = creatBtn(@"btn_combine_Normal",@"btn_combine_Helight")];
-    [self addSubview:self.selectAllBtn = creatBtn(@"btn_select_normal",@"btn_select_hlight")];
+//    [self addSubview:self.selectAllBtn = creatBtn(@"btn_select_normal",@"btn_select_hlight")];
+
+    self.selectAllBtn = ({
+        UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btn setImage:[UIImage imageNamed:@"btn_select_normal"] forState:UIControlStateNormal];
+        [btn setImage:[UIImage imageNamed:@"btn_select_hlight"] forState:UIControlStateSelected];
+        btn;
+    });
+    [self addSubview:self.selectAllBtn];
     [self.selectAllBtn setTitle:@"选择今天所有配件" forState:UIControlStateNormal];
     [self.selectAllBtn setTitleColor:text_Color1 forState:UIControlStateNormal];
 
@@ -88,7 +96,7 @@
 
     sender.selected = !sender.selected;
     if (sender.selected == YES) {
-        [sender setImage:[UIImage imageNamed:@"btn_select_hlight"] forState:UIControlStateNormal];
+//        [sender setImage:[UIImage imageNamed:@"btn_select_hlight"] forState:UIControlStateNormal];
 
         if ([_delegate respondsToSelector:@selector(didHandelAction:)]) {
             [_delegate didHandelAction:PickModelSelectAll];
@@ -97,7 +105,7 @@
             self.pickAction(PickModelSelectAll);
         }
     }else{
-        [sender setImage:[UIImage imageNamed:@"btn_select_normal"] forState:UIControlStateNormal];
+//        [sender setImage:[UIImage imageNamed:@"btn_select_normal"] forState:UIControlStateNormal];
         if ([_delegate respondsToSelector:@selector(didHandelAction:)]) {
             [_delegate didHandelAction:PickModelNormal];
         }
@@ -150,7 +158,15 @@
     }];
 }
 
+-(void)setSelectAllState:(BOOL)selectAllState{
+    _selectAllState = selectAllState;
+    if (selectAllState == YES) {
+        _selectAllBtn.selected = YES;
 
+    }else{
+        _selectAllBtn.selected = NO;
+    }
+}
 
 -(void)dismiss{
     _selectAllBtn.selected = NO;

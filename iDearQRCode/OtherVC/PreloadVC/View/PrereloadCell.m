@@ -265,17 +265,17 @@
     _selectType = selectType;
 
     if (selectType == selectCellNormal) {
-
-        [_selectBtn setImage:[UIImage imageNamed:@"btn_normal"] forState:UIControlStateNormal];
+        _selectBtn.selected = NO;
+//        [_selectBtn setImage:[UIImage imageNamed:@"btn_normal"] forState:UIControlStateNormal];
 
 
     }else if (selectType == selectCellDelete){
-
-        [_selectBtn setImage:[UIImage imageNamed:@"btn_deleteNormal"] forState:UIControlStateNormal];
+        _selectBtn.selected = YES;
+        [_selectBtn setImage:[UIImage imageNamed:@"btn_deleteNormal"] forState:UIControlStateSelected];
 
     }else if (selectType == selectCellCombine){
-
-        [_selectBtn setImage:[UIImage imageNamed:@"btn_combine"] forState:UIControlStateNormal];
+        _selectBtn.selected = YES;
+        [_selectBtn setImage:[UIImage imageNamed:@"btn_combine"] forState:UIControlStateSelected];
 
     }else{
 
@@ -319,10 +319,10 @@
 
         if (self.selectType == selectCellDelete) {
 
-            [sender setImage:[UIImage imageNamed:@"btn_deleteNormal"] forState:UIControlStateNormal];
+            [sender setImage:[UIImage imageNamed:@"btn_deleteNormal"] forState:UIControlStateSelected];
         }else if (self.selectType == selectCellCombine){
 
-            [sender setImage:[UIImage imageNamed:@"btn_combine"] forState:UIControlStateNormal];
+            [sender setImage:[UIImage imageNamed:@"btn_combine"] forState:UIControlStateSelected];
         }else{
 
         }

@@ -190,7 +190,14 @@ static NSString * identifier = @"PrereloadCell";
             [selfWeak deleteObjc:model.pickId];
         }
 
+        if (self.type == PickModelCombine) {
+            if (selfWeak.selectArray.count == selfWeak.dataSource.count) {
+                selfWeak.pickFoot.selectAllState = YES;
+            }else{
+                selfWeak.pickFoot.selectAllState = NO;
+            }
 
+        }
         [selfWeak.tableView reloadData];
 
     };

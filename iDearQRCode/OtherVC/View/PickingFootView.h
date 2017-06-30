@@ -31,6 +31,7 @@ typedef NS_ENUM(NSInteger, PickModelType) {
 
 @property (nonatomic , weak) id<pickingFootViewDelegate> delegate;
 
+@property (nonatomic , assign) BOOL selectAllState;
 
 
 

@@ -9,6 +9,7 @@
 #import "PickingCell.h"
 #import "PickingModel.h"
 #import "UIImage+Common.h"
+#import "UIView+CornerView.h"
 @interface PickingCell ()
 {
     UIView * _topView;
@@ -33,6 +34,13 @@
 @implementation PickingCell
 
 
+
+//+(instancetype)instancedCell:(UITableView *)tableview{
+//
+//
+//}
+
+
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.backgroundColor = back_Color;
@@ -48,6 +56,10 @@
     _bakcView.layer.borderWidth = 0.5f;
     _bakcView.layer.cornerRadius = 5.0f;
     _bakcView.layer.masksToBounds = YES;
+
+
+
+
     _bakcView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_bakcView];
 
@@ -57,8 +69,11 @@
     _topView = top;
 
     _head = [[UIImageView alloc] init];
+//    _head.image = [UIImage imageNamed:@"btn_combine"];
     _head.layer.cornerRadius = 15.0f;
     _head.layer.masksToBounds = YES;
+//    _head.layer.mask = [_head getCornerView];
+
 //    _head.backgroundColor = [UIColor orangeColor];
     [_bakcView addSubview:_head];
 
@@ -99,6 +114,7 @@
         make.left.equalTo(_bakcView).offset(8);
         make.height.width.mas_equalTo(30);//+30
     }];
+
 
     [_name_label mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_head).offset(-3);
@@ -149,7 +165,8 @@
     _name_label.text = pickModel.pickId;
     _do_label.text = pickModel.doSometing;
     _join_label.text = pickModel.join_time;
-
+//    self.selectBtn.selected = pickModel.select;
+//    self.selectType = pickModel.type ? (selectCellType)pickModel.type : selectCellNormal;
 
     for (UIView *view in _LabelView.subviews) {
         [view removeFromSuperview];
@@ -222,11 +239,15 @@
     _selectType = selectType;
 
     if (selectType == selectCellNormal) {
-        [_selectBtn setImage:[UIImage imageNamed:@"btn_normal"] forState:UIControlStateNormal];
+        _selectBtn.selected = NO;
+//        [_selectBtn setImage:[UIImage imageNamed:@"btn_normal"] forState:UIControlStateNormal];
     }else if (selectType == selectCellDelete){
-        [_selectBtn setImage:[UIImage imageNamed:@"btn_deleteNormal"] forState:UIControlStateNormal];
+        _selectBtn.selected = YES;
+        [_selectBtn setImage:[UIImage imageNamed:@"btn_deleteNormal"] forState:UIControlStateSelected];
     }else if (selectType == selectCellCombine){
-        [_selectBtn setImage:[UIImage imageNamed:@"btn_combine"] forState:UIControlStateNormal];
+
+        _selectBtn.selected = YES;
+        [_selectBtn setImage:[UIImage imageNamed:@"btn_combine"] forState:UIControlStateSelected];
     }else{
 
     }
@@ -259,10 +280,10 @@
 
     if (sender.selected == YES) {
         if (self.selectType == selectCellDelete) {
-            [sender setImage:[UIImage imageNamed:@"btn_deleteNormal"] forState:UIControlStateNormal];
+            [sender setImage:[UIImage imageNamed:@"btn_deleteNormal"] forState:UIControlStateSelected];
         }else if (self.selectType == selectCellCombine){
 
-            [sender setImage:[UIImage imageNamed:@"btn_combine"] forState:UIControlStateNormal];
+            [sender setImage:[UIImage imageNamed:@"btn_combine"] forState:UIControlStateSelected];
         }else{
             
         }
@@ -270,7 +291,7 @@
             self.selectCellAction(self.pickModel , sender.selected ,self.selectCell,self.index);
         }
     }else{
-        [sender setImage:[UIImage imageNamed:@"btn_normal"] forState:UIControlStateNormal];
+//        [sender setImage:[UIImage imageNamed:@"btn_normal"] forState:UIControlStateNormal];
         if (self.selectType == selectCellDelete) {
 
         }else if (self.selectType == selectCellCombine){

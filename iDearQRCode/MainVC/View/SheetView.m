@@ -9,7 +9,7 @@
 #import "SheetView.h"
 #import "SheetViewCell.h"
 #import "UIView+MJExtension.h"
-@interface SheetView ()<UITableViewDelegate , UITableViewDataSource,UIGestureRecognizerDelegate>
+@interface SheetView ()<UITableViewDelegate , UITableViewDataSource,UIGestureRecognizerDelegate,CAAnimationDelegate>
 
 @property (nonatomic , copy) void(^clickCell)(NSInteger);
 @property (nonatomic , strong) UITableView * tableView;
@@ -123,6 +123,13 @@
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self removeFromSuperview];
 }
+
+
+#pragma mark - CAAnimationDelegate
+-(void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+    [self remove];
+}
+
 
 - (UITableView *)tableView{
     if (!_tableView) {

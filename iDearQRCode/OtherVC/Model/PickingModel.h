@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface PickingModel : NSObject
 
 @property (nonatomic , copy) NSString * URL;
@@ -18,5 +19,8 @@
 @property (nonatomic , assign) NSInteger count;
 @property (nonatomic , assign) CGFloat height;
 @property (nonatomic , copy) NSString * pickId;
+
+//@property (nonatomic , assign) BOOL select;
+//@property (nonatomic , assign) NSInteger type;
 
 @end

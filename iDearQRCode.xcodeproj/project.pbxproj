@@ -40,10 +40,12 @@
 		1121C0371EC9C1300002D73C /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1121C0291EC9C1300002D73C /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		1121C0381EC9C1300002D73C /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1121C02B1EC9C1300002D73C /* View+MASAdditions.m */; };
 		1121C0391EC9C1300002D73C /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1121C02E1EC9C1300002D73C /* ViewController+MASAdditions.m */; };
+		1126176F1EFD092500525526 /* QRManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1126176E1EFD092500525526 /* QRManager.m */; };
 		11346AB21ECED3ED00BFDD69 /* UITableView+SDAutoTableViewCellHeight.m in Sources */ = {isa = PBXBuildFile; fileRef = 11346AAF1ECED3ED00BFDD69 /* UITableView+SDAutoTableViewCellHeight.m */; };
 		11346AB31ECED3ED00BFDD69 /* UIView+SDAutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 11346AB11ECED3ED00BFDD69 /* UIView+SDAutoLayout.m */; };
 		11346AB61ECEE02D00BFDD69 /* PickAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 11346AB51ECEE02D00BFDD69 /* PickAlert.m */; };
 		113580DB1ED7BEB80069E21E /* PartSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 113580DA1ED7BEB80069E21E /* PartSearchView.m */; };
+		113DF2871EFBB1DF00819884 /* UIView+CornerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 113DF2861EFBB1DF00819884 /* UIView+CornerView.m */; };
 		1145E55B1EE7902A00B4C56D /* BaseViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1145E55A1EE7902A00B4C56D /* BaseViewModel.m */; };
 		1148290A1ECBDD6100BBCBF3 /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 114828E41ECBDD6100BBCBF3 /* MKAnnotationView+WebCache.m */; };
 		1148290B1ECBDD6100BBCBF3 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 114828E61ECBDD6100BBCBF3 /* NSData+ImageContentType.m */; };
@@ -509,6 +511,8 @@
 		1121C02C1EC9C1300002D73C /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		1121C02D1EC9C1300002D73C /* ViewController+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ViewController+MASAdditions.h"; sourceTree = "<group>"; };
 		1121C02E1EC9C1300002D73C /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+MASAdditions.m"; sourceTree = "<group>"; };
+		1126176D1EFD092500525526 /* QRManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRManager.h; sourceTree = "<group>"; };
+		1126176E1EFD092500525526 /* QRManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRManager.m; sourceTree = "<group>"; };
 		11346AAD1ECED3ED00BFDD69 /* SDAutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDAutoLayout.h; sourceTree = "<group>"; };
 		11346AAE1ECED3ED00BFDD69 /* UITableView+SDAutoTableViewCellHeight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+SDAutoTableViewCellHeight.h"; sourceTree = "<group>"; };
 		11346AAF1ECED3ED00BFDD69 /* UITableView+SDAutoTableViewCellHeight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+SDAutoTableViewCellHeight.m"; sourceTree = "<group>"; };
@@ -518,6 +522,8 @@
 		11346AB51ECEE02D00BFDD69 /* PickAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickAlert.m; sourceTree = "<group>"; };
 		113580D91ED7BEB80069E21E /* PartSearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartSearchView.h; path = ../Controller/PartSearchView.h; sourceTree = "<group>"; };
 		113580DA1ED7BEB80069E21E /* PartSearchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PartSearchView.m; path = ../Controller/PartSearchView.m; sourceTree = "<group>"; };
+		113DF2851EFBB1DF00819884 /* UIView+CornerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+CornerView.h"; sourceTree = "<group>"; };
+		113DF2861EFBB1DF00819884 /* UIView+CornerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+CornerView.m"; sourceTree = "<group>"; };
 		1145E5591EE7902A00B4C56D /* BaseViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewModel.h; sourceTree = "<group>"; };
 		1145E55A1EE7902A00B4C56D /* BaseViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewModel.m; sourceTree = "<group>"; };
 		1145E55C1EE7905600B4C56D /* BaseViewModelProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewModelProtocol.h; sourceTree = "<group>"; };
@@ -1735,6 +1741,8 @@
 			children = (
 				11E3E9EC1ECAC90D00D72EE1 /* UIImage+Common */,
 				11E3E9DD1ECAC90D00D72EE1 /* NSString */,
+				113DF2851EFBB1DF00819884 /* UIView+CornerView.h */,
+				113DF2861EFBB1DF00819884 /* UIView+CornerView.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1744,6 +1752,8 @@
 			children = (
 				118E69001ED94D1500B62015 /* UserManager */,
 				118E68E91ED92BB900B62015 /* NetManager */,
+				1126176D1EFD092500525526 /* QRManager.h */,
+				1126176E1EFD092500525526 /* QRManager.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -3389,6 +3399,7 @@
 				11F7B0741ED40AB300A9F224 /* ZXByteArray.m in Sources */,
 				1145E55B1EE7902A00B4C56D /* BaseViewModel.m in Sources */,
 				11F7B0DA1ED40AB300A9F224 /* ZXUPCEANReader.m in Sources */,
+				1126176F1EFD092500525526 /* QRManager.m in Sources */,
 				11F7B0731ED40AB300A9F224 /* ZXBoolArray.m in Sources */,
 				114829121ECBDD6100BBCBF3 /* SDWebImageDownloaderOperation.m in Sources */,
 				11E3E9FA1ECAC90D00D72EE1 /* NSString+Crypt.m in Sources */,
@@ -3420,6 +3431,7 @@
 				11346AB31ECED3ED00BFDD69 /* UIView+SDAutoLayout.m in Sources */,
 				11F7B0CE1ED40AB300A9F224 /* ZXEANManufacturerOrgSupport.m in Sources */,
 				11F7B0DE1ED40AB300A9F224 /* ZXModulusPoly.m in Sources */,
+				113DF2871EFBB1DF00819884 /* UIView+CornerView.m in Sources */,
 				11F7B0BB1ED40AB300A9F224 /* ZXRSSExpandedReader.m in Sources */,
 				11F7B0E91ED40AB300A9F224 /* ZXPDF417ScanningDecoder.m in Sources */,
 				11E3E9FE1ECAC90D00D72EE1 /* UIImage+Common.m in Sources */,

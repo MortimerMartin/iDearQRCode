@@ -44,10 +44,10 @@ static NSString * identifier = @"PickingCell" ;
 
     self.type = selectCellNormal;
     [self setupRightItem:@"添加"];
-//    [self setupHeadView];
+
     [self setupPickingHeadView];
     [self setupUI];
-//    [self setupFootView];
+
     [self setupPickFootView];
     [self loadData];
     // Do any additional setup after loading the view.
@@ -181,13 +181,26 @@ static NSString * identifier = @"PickingCell" ;
             NSMutableArray * newArray = [selfWeak.tempArray mutableCopy];
             [newArray replaceObjectAtIndex:index withObject:@{@"state" : @(type)}];
             selfWeak.tempArray = newArray;
+
+
+
             if (select == YES) {
                 [selfWeak.selectArray addObject:model.pickId];
             }else{
                 [selfWeak deleteObjc:model.pickId];
+
             }
             
-            
+
+            if (self.type == PickModelCombine) {
+                if (selfWeak.selectArray.count == selfWeak.dataSource.count) {
+                    selfWeak.pickFoot.selectAllState = YES;
+                }else{
+                    selfWeak.pickFoot.selectAllState = NO;
+                }
+
+            }
+
             [selfWeak.tableView reloadData];
             
         };
@@ -424,7 +437,7 @@ static NSString * identifier = @"PickingCell" ;
             [self.selectArray removeAllObjects];
             for (int i = 0; i<self.dataSource.count; i++) {
                 PickingModel * model = self.dataSource[i];
-                [self.selectArray addObject:model.pickId];
+                [self.selectArray addObject:model];//.pickId
             }
             [self setCellState:selectCellCombine];
             [self.tableView reloadData];
@@ -439,8 +452,11 @@ static NSString * identifier = @"PickingCell" ;
 
 //设置cell的选中状态
 -(void)setCellState:(selectCellType)type{
+
     NSMutableArray * newArray = [self.tempArray mutableCopy];
     for (int i = 0; i<self.dataSource.count; i++) {
+//        PickingModel * model = self.dataSource[i];
+//        model.type = type;
          [newArray replaceObjectAtIndex:i withObject:@{@"state" : @(type)}];
     }
     self.tempArray = newArray;
